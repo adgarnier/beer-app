@@ -3,8 +3,11 @@
 from __future__ import annotations
 
 import csv
+from datetime import date
 from importlib.resources import files
 from pathlib import Path
+
+from .pub_data import Pub
 
 
 def _default_visited_path() -> Path:
@@ -12,62 +15,86 @@ def _default_visited_path() -> Path:
     return Path(files("beer_app").joinpath("data", "visited_pubs.csv"))
 
 
-def load_visited(path: str | Path | None = None) -> set[int]:
-    """Return the IDs currently marked as visited."""
+def load_visit_history(path: str | Path | None = None) -> tuple[dict[int, bool], dict[int, list[str]]]:
+    """Return current visited statuses and visit dates from the CSV."""
     source = Path(path) if path is not None else _default_visited_path()
     if not source.exists():
-        return set()
+        return {}, {}
 
-    visited = set()
+    statuses: dict[int, bool] = {}
+    dates: dict[int, list[str]] = {}
     with source.open(encoding="utf-8-sig", newline="") as csv_file:
-        for row in csv.DictReader(csv_file):
+        reader = csv.DictReader(csv_file)
+        for row in reader:
             try:
-                if row.get("Visited", "").strip().lower() in {"true", "1", "yes"}:
-                    visited.add(int(row["ID"]))
+                pub_id = int(row["ID"])
             except (KeyError, ValueError):
                 continue
-    return visited
+            status_text = (row.get("Visited") or "").strip().lower()
+            if status_text in {"true", "1", "yes"}:
+                statuses[pub_id] = True
+            elif status_text in {"false", "0", "no"}:
+                statuses[pub_id] = False
+            visit_date = (row.get("VisitDate") or "").strip()
+            if visit_date:
+                dates.setdefault(pub_id, []).append(visit_date)
+    return statuses, dates
 
 
-def save_visited(visited: set[int], path: str | Path | None = None) -> None:
-    """Write visited pub IDs to CSV, including a header when the set is empty."""
+def save_visit_history(
+    statuses: dict[int, bool], dates: dict[int, list[str]], path: str | Path | None = None
+) -> None:
+    """Write current status and visit dates for each pub to CSV."""
     destination = Path(path) if path is not None else _default_visited_path()
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("w", encoding="utf-8", newline="") as csv_file:
         writer = csv.writer(csv_file)
-        writer.writerow(["ID", "Visited"])
-        writer.writerows([pub_id, "true"] for pub_id in sorted(visited))
+        writer.writerow(["ID", "Visited", "VisitDate"])
+        for pub_id in sorted(statuses.keys() | dates.keys()):
+            visit_dates = dates.get(pub_id) or [""]
+            for visit_date in visit_dates:
+                writer.writerow([pub_id, str(statuses.get(pub_id, False)).lower(), visit_date])
 
 
-def manage_visited(pubs) -> None:
-    """Show pubs and let the user toggle visited status by ID."""
-    visited = load_visited()
-    print("\nVisited pubs (enter a pub ID to toggle, or press Enter to return):")
+def manage_visited(pubs: list[Pub]) -> None:
+    """Show pub visit status and record each visit entered by the user."""
+    statuses, dates = load_visit_history()
+    print("\nEnter a pub ID to record a visit, 'unvisit ID' to clear its status, or Enter to return:")
     for pub in pubs:
-        marker = "[x]" if pub.id in visited else "[ ]"
-        print(f"{marker} {pub.id}: {pub.name}")
+        marker = "[x]" if statuses.get(pub.id, False) else "[ ]"
+        visit_dates = ", ".join(dates.get(pub.id, []))
+        suffix = f" — visits: {visit_dates}" if visit_dates else ""
+        print(f"{marker} {pub.id}: {pub.name}{suffix}")
 
     valid_ids = {pub.id for pub in pubs}
     while True:
         try:
-            answer = input("Pub ID: ").strip()
+            answer = input("Pub ID or command: ").strip()
         except (EOFError, KeyboardInterrupt):
             print()
             return
         if not answer:
             return
+        parts = answer.split()
+        unvisit = len(parts) == 2 and parts[0].lower() == "unvisit"
+        if len(parts) > 1 and not unvisit:
+            print("Enter a pub ID, 'unvisit ID', or press Enter to return.")
+            continue
         try:
-            pub_id = int(answer)
+            pub_id = int(parts[-1])
         except ValueError:
-            print("Enter a numeric pub ID, or press Enter to return.")
+            print("Enter a numeric pub ID, 'unvisit ID', or press Enter to return.")
             continue
         if pub_id not in valid_ids:
             print("That ID is not in the pub list.")
             continue
-        if pub_id in visited:
-            visited.remove(pub_id)
-            print(f"Unmarked pub {pub_id} as visited.")
+        if unvisit:
+            statuses[pub_id] = False
+            save_visit_history(statuses, dates)
+            print(f"Marked pub {pub_id} as not visited. Its visit dates are retained.")
         else:
-            visited.add(pub_id)
-            print(f"Marked pub {pub_id} as visited.")
-        save_visited(visited)
+            visit_date = date.today().isoformat()
+            statuses[pub_id] = True
+            dates.setdefault(pub_id, []).append(visit_date)
+            save_visit_history(statuses, dates)
+            print(f"Recorded a visit to pub {pub_id} on {visit_date}.")
