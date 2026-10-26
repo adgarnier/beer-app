@@ -1,1 +1,1 @@
-"""A package for doing tracking pub visits across the city of Oxford."""
+"""Track pub visits across the city of Oxford."""
