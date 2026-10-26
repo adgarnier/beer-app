@@ -8,11 +8,16 @@ import threading
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib.resources import files
+from pathlib import Path
 
 
 def build_map_page() -> str:
     """Return the HTML page used by the local Oxford map server."""
-    template = files("ci_course").joinpath("templates", "oxford_map.html")
+    if __package__:
+        template = files("beer_app").joinpath("templates", "oxford_map.html")
+        return template.read_text(encoding="utf-8")
+
+    template = Path(__file__).with_name("templates") / "oxford_map.html"
     return template.read_text(encoding="utf-8")
 
 
