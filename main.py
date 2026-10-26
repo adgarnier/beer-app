@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from beer_app import oxford_map
 from beer_app.pub_data import load_pubs
+from beer_app.visited_pubs import manage_visited
 from beer_app.pub_search import (
     SEARCH_HELP,
     format_pub_values,
@@ -39,6 +40,7 @@ WELCOME_MESSAGE = r"""
 2. Load the pub list onto the map
 3. Unload the pub list from the map
 4. Search the loaded pubs
+5. Check off visited pubs
 Q. Quit
 """
 
@@ -118,11 +120,15 @@ def main() -> int:
                         print(f"Showing all {len(matches)} pubs.")
                 continue
 
+            if choice == "5":
+                manage_visited(loaded_pubs or load_pubs())
+                continue
+
             if choice == "q":
                 print("Goodbye!")
                 return 0
 
-            print("Please enter 1 to launch, 2 to load, 3 to unload, 4 to search, or Q to quit.")
+            print("Please enter 1 to launch, 2 to load, 3 to unload, 4 to search, 5 to check off visited pubs, or Q to quit.")
     finally:
         if map_server is not None:
             print("Stopping the Oxford map...")
