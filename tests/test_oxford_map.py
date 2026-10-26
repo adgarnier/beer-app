@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from ci_course.oxford_map import build_map_page, main
+from beer_app.oxford_map import build_map_page, main
 
 
 def test_map_page_contains_leaflet_and_oxford_coordinates():
@@ -15,7 +15,7 @@ def test_map_page_contains_leaflet_and_oxford_coordinates():
     assert "OpenStreetMap contributors" in page
 
 
-@patch("ci_course.oxford_map.run_map_server")
+@patch("beer_app.oxford_map.run_map_server")
 def test_main_starts_server_without_opening_browser(run_map_server):
     assert main(["--host", "localhost", "--port", "8765", "--no-browser"]) == 0
 
