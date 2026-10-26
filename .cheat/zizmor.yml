@@ -1,0 +1,12 @@
+# Pin policy for the unpinned-uses audit.
+#
+# GitHub's own actions may be used by tag: they are published by the same
+# organisation that runs the workflow, and the tags are not rewritten.
+# Everything else must be pinned to a commit hash, because a tag belongs to
+# the action's author and they can move it to different code at any time.
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        actions/*: ref-pin
+        "*": hash-pin

@@ -1,0 +1,16 @@
+version: 2
+
+updates:
+  # Only GitHub Actions. This project's Python dependencies are declared
+  # without version bounds and there is no lockfile, so there is nothing for
+  # Dependabot to raise. Actions are pinned, so there is.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 14
+    groups:
+      actions:
+        patterns:
+          - "*"

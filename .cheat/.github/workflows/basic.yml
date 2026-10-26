@@ -1,0 +1,17 @@
+name: Basic GitHub Actions Workflow
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  basic-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run a one-line script
+        run: echo "Hello, world!"

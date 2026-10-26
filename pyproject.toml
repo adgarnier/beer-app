@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ci_course"
+version = "0.1.0"
+description = "Demonstration of setting up continuous integration for a Python project"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+]
+docs = [
+    "sphinx",
+]
+
+[project.scripts]
+ci-course = "ci_course.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B"]
+
+# The docstring rules are deliberately not selected here. The Docstrings
+# workflow runs them separately, with "ruff check --select D src/", so that
+# documentation is a stage of its own rather than more lint noise. The
+# convention below is what makes the full D set usable: it disables the rules
+# that contradict numpydoc, which is the style this package is written in.
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["ci_course"]

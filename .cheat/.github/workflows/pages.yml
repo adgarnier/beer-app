@@ -1,0 +1,92 @@
+name: Documentation
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+# The workflow gets read access only. The deployment job widens this for
+# itself, so nothing before the approval gate can publish.
+permissions:
+  contents: read
+
+# Deployments are not cancelled part way through, so unlike the test
+# workflows this queues rather than cancelling the run already in progress.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install dependencies
+        run: |
+          python -m pip install .[dev]
+
+      - name: Test with pytest
+        run: |
+          pytest
+
+  build-docs:
+    needs: tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install dependencies
+        run: |
+          python -m pip install .[docs]
+
+      - name: Build documentation
+        run: |
+          sphinx-build -W -b html docs docs/_build/html
+
+      - uses: actions/configure-pages@v6
+
+      - name: Upload the built documentation as a Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs/_build/html
+
+  deploy:
+    needs: build-docs
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    # No checkout, no install, no build. This job publishes the artifact
+    # that build-docs produced, so what is reviewed is what goes live.
+    steps:
+      - name: Deploy the artifact built above
+        id: deployment
+        uses: actions/deploy-pages@v5
