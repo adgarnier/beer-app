@@ -4,12 +4,16 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import json
 import threading
 import webbrowser
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib.resources import files
 from pathlib import Path
+
+if __package__:
+    from .pub_data import Pub
 
 
 def build_map_page() -> str:
@@ -45,6 +49,17 @@ class MapRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(content)
             return
 
+        if self.path == "/api/pubs":
+            map_state = self.server.map_state  # type: ignore[attr-defined]
+            content = json.dumps(map_state.snapshot()).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+
         if self.path == "/favicon.ico":
             self.send_response(204)
             self.end_headers()
@@ -57,12 +72,44 @@ class MapRequestHandler(BaseHTTPRequestHandler):
 
 
 @dataclass
+class MapState:
+    """Thread-safe pub data shared by the terminal and browser map."""
+
+    pubs: list[Pub] = field(default_factory=list)
+    version: int = 0
+    lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
+
+    def replace_pubs(self, pubs: list[Pub]) -> None:
+        """Replace the pubs displayed by the map."""
+        with self.lock:
+            self.pubs = list(pubs)
+            self.version += 1
+
+    def snapshot(self) -> dict[str, int | list[dict[str, int | float | str]]]:
+        """Return a consistent JSON-ready snapshot of the map state."""
+        with self.lock:
+            return {
+                "version": self.version,
+                "pubs": [pub.as_dict() for pub in self.pubs],
+            }
+
+
+@dataclass
 class BackgroundMapServer:
     """A running map server and its background thread."""
 
     server: ThreadingHTTPServer
     thread: threading.Thread
     url: str
+    state: MapState
+
+    def set_pubs(self, pubs: list[Pub]) -> None:
+        """Replace the pub markers exposed to the browser map."""
+        self.state.replace_pubs(pubs)
+
+    def clear_pubs(self) -> None:
+        """Remove all pub markers exposed to the browser map."""
+        self.state.replace_pubs([])
 
     def stop(self) -> None:
         """Stop the server and wait briefly for its thread to finish."""
@@ -79,6 +126,8 @@ def start_map_server(
 ) -> BackgroundMapServer:
     """Start the map server in the background and return its controller."""
     server = ThreadingHTTPServer((host, port), MapRequestHandler)
+    state = MapState()
+    server.map_state = state  # type: ignore[attr-defined]
     actual_port = server.server_address[1]
     url = f"http://{host}:{actual_port}"
     thread = threading.Thread(target=server.serve_forever, name="oxford-map-server", daemon=True)
@@ -90,7 +139,7 @@ def start_map_server(
         browser_timer.start()
 
     print(f"Oxford Pub Map is running at {url}")
-    return BackgroundMapServer(server=server, thread=thread, url=url)
+    return BackgroundMapServer(server=server, thread=thread, url=url, state=state)
 
 
 def run_map_server(host: str = "127.0.0.1", port: int = 8000, open_browser: bool = True) -> None:

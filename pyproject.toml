@@ -37,7 +37,7 @@ py-modules = ["main"]
 where = ["src"]
 
 [tool.setuptools.package-data]
-beer_app = ["templates/*.html"]
+beer_app = ["data/*.csv", "templates/*.html"]
 
 [tool.ruff]
 line-length = 120
