@@ -8,7 +8,7 @@ from importlib.resources import files
 from pathlib import Path
 
 
-REQUIRED_COLUMNS = {"ID", "Pub", "Location", "Sponsor", "Notes", "Latitude", "Longitude"}
+REQUIRED_COLUMNS = {"ID", "Pub", "Road", "Location", "Sponsor", "Notes", "Latitude", "Longitude"}
 
 
 @dataclass(frozen=True)
@@ -17,6 +17,7 @@ class Pub:
 
     id: int
     name: str
+    road: str
     location: str
     sponsor: str
     notes: str
@@ -31,8 +32,8 @@ class Pub:
 def _default_pub_list():
     """Return the packaged pub-list resource."""
     if __package__:
-        return files("beer_app").joinpath("data", "pub_list_v1.csv")
-    return Path(__file__).with_name("data") / "pub_list_v1.csv"
+        return files("beer_app").joinpath("data", "pub_list_v3.csv")
+    return Path(__file__).with_name("data") / "pub_list_v3.csv"
 
 
 def load_pubs(path: str | Path | None = None) -> list[Pub]:
@@ -70,6 +71,7 @@ def _pub_from_row(row: dict[str, str], row_number: int) -> Pub:
     return Pub(
         id=pub_id,
         name=name,
+        road=row["Road"].strip(),
         location=row["Location"].strip(),
         sponsor=row["Sponsor"].strip(),
         notes=row["Notes"].strip(),
@@ -80,4 +82,4 @@ def _pub_from_row(row: dict[str, str], row_number: int) -> Pub:
 
 if __name__ == "__main__":
     loaded_pubs = load_pubs()
-    print(f"Loaded {len(loaded_pubs)} pubs from pub_list_v1.csv")
+    print(f"Loaded {len(loaded_pubs)} pubs from pub_list_v3.csv")
