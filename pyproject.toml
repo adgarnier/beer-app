@@ -27,9 +27,13 @@ docs = [
 
 [project.scripts]
 ci-course = "ci_course.cli:main"
+oxford-pub-map = "ci_course.oxford_map:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+ci_course = ["templates/*.html"]
 
 [tool.ruff]
 line-length = 120
