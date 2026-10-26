@@ -6,6 +6,7 @@ import argparse
 import contextlib
 import threading
 import webbrowser
+from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib.resources import files
 from pathlib import Path
@@ -55,24 +56,57 @@ class MapRequestHandler(BaseHTTPRequestHandler):
         """Suppress routine browser request logs."""
 
 
-def run_map_server(host: str = "127.0.0.1", port: int = 8000, open_browser: bool = True) -> None:
-    """Serve the map until the user stops the process."""
+@dataclass
+class BackgroundMapServer:
+    """A running map server and its background thread."""
+
+    server: ThreadingHTTPServer
+    thread: threading.Thread
+    url: str
+
+    def stop(self) -> None:
+        """Stop the server and wait briefly for its thread to finish."""
+        if self.thread.is_alive():
+            self.server.shutdown()
+        self.server.server_close()
+        self.thread.join(timeout=2)
+
+
+def start_map_server(
+    host: str = "127.0.0.1",
+    port: int = 8000,
+    open_browser: bool = True,
+) -> BackgroundMapServer:
+    """Start the map server in the background and return its controller."""
     server = ThreadingHTTPServer((host, port), MapRequestHandler)
     actual_port = server.server_address[1]
     url = f"http://{host}:{actual_port}"
+    thread = threading.Thread(target=server.serve_forever, name="oxford-map-server", daemon=True)
+    thread.start()
+
+    if open_browser:
+        browser_timer = threading.Timer(0.25, webbrowser.open, args=(url,))
+        browser_timer.daemon = True
+        browser_timer.start()
 
     print(f"Oxford Pub Map is running at {url}")
+    return BackgroundMapServer(server=server, thread=thread, url=url)
+
+
+def run_map_server(host: str = "127.0.0.1", port: int = 8000, open_browser: bool = True) -> None:
+    """Serve the map until the user stops the process."""
+    background_server = start_map_server(host=host, port=port, open_browser=open_browser)
     print("Press Ctrl+C to stop it.")
 
     if open_browser:
-        threading.Timer(0.25, webbrowser.open, args=(url,)).start()
+        print("The map should open in your browser shortly.")
 
     try:
-        server.serve_forever()
+        background_server.thread.join()
     except KeyboardInterrupt:
         print("\nStopping Oxford Pub Map.")
     finally:
-        server.server_close()
+        background_server.stop()
 
 
 def build_parser() -> argparse.ArgumentParser:
