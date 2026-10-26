@@ -83,7 +83,6 @@
       if (!response.ok) {
         throw new Error(`Could not load pubs: ${response.status}`);
       }
-
       const payload = await response.json();
       if (payload.version === pubVersion) {
         return;
