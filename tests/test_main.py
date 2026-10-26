@@ -3,10 +3,10 @@
 from unittest.mock import patch
 
 from beer_app.pub_data import Pub
-from main import main
+from beer_app.main import main
 
 
-@patch("main.oxford_map.start_map_server")
+@patch("beer_app.main.oxford_map.start_map_server")
 @patch("builtins.input", side_effect=["1", "q"])
 def test_launches_oxford_map_in_background(input_mock, start_map_server, capsys):
     map_server = start_map_server.return_value
@@ -30,7 +30,7 @@ def test_can_quit_from_welcome_menu(input_mock, capsys):
     assert "Goodbye!" in capsys.readouterr().out
 
 
-@patch("main.oxford_map.start_map_server")
+@patch("beer_app.main.oxford_map.start_map_server")
 @patch("builtins.input", side_effect=["1", "1", "q"])
 def test_does_not_launch_a_second_map_server(input_mock, start_map_server, capsys):
     start_map_server.return_value.url = "http://127.0.0.1:8000"
@@ -42,8 +42,8 @@ def test_does_not_launch_a_second_map_server(input_mock, start_map_server, capsy
     assert "already running" in capsys.readouterr().out
 
 
-@patch("main.load_pubs")
-@patch("main.oxford_map.start_map_server")
+@patch("beer_app.main.load_pubs")
+@patch("beer_app.main.oxford_map.start_map_server")
 @patch("builtins.input", side_effect=["1", "2", "q"])
 def test_loads_pubs_onto_running_map(input_mock, start_map_server, load_pubs, capsys):
     pubs = [object(), object()]
@@ -58,7 +58,7 @@ def test_loads_pubs_onto_running_map(input_mock, start_map_server, load_pubs, ca
     assert "Added 2 pubs" in capsys.readouterr().out
 
 
-@patch("main.load_pubs")
+@patch("beer_app.main.load_pubs")
 @patch("builtins.input", side_effect=["2", "q"])
 def test_requires_map_before_loading_pubs(input_mock, load_pubs, capsys):
     assert main() == 0
@@ -67,7 +67,7 @@ def test_requires_map_before_loading_pubs(input_mock, load_pubs, capsys):
     assert "Launch the Oxford map" in capsys.readouterr().out
 
 
-@patch("main.oxford_map.start_map_server")
+@patch("beer_app.main.oxford_map.start_map_server")
 @patch("builtins.input", side_effect=["1", "3", "q"])
 def test_unloads_pubs_from_running_map(input_mock, start_map_server, capsys):
     map_server = start_map_server.return_value
@@ -86,9 +86,9 @@ def test_requires_map_before_unloading_pubs(input_mock, capsys):
     assert "Launch the Oxford map" in capsys.readouterr().out
 
 
-@patch("main.search_pubs")
-@patch("main.load_pubs")
-@patch("main.oxford_map.start_map_server")
+@patch("beer_app.main.search_pubs")
+@patch("beer_app.main.load_pubs")
+@patch("beer_app.main.oxford_map.start_map_server")
 @patch("builtins.input", side_effect=["1", "2", "4", "jericho", "q"])
 def test_searches_loaded_pubs_and_updates_map(input_mock, start_map_server, load_pubs, search_pubs, capsys):
     pubs = [object(), object()]
@@ -105,8 +105,8 @@ def test_searches_loaded_pubs_and_updates_map(input_mock, start_map_server, load
     assert "Found 1 pubs" in capsys.readouterr().out
 
 
-@patch("main.search_pubs")
-@patch("main.oxford_map.start_map_server")
+@patch("beer_app.main.search_pubs")
+@patch("beer_app.main.oxford_map.start_map_server")
 @patch("builtins.input", side_effect=["1", "4", "q"])
 def test_requires_loaded_pubs_before_searching(input_mock, start_map_server, search_pubs, capsys):
     assert main() == 0
@@ -115,9 +115,9 @@ def test_requires_loaded_pubs_before_searching(input_mock, start_map_server, sea
     assert "Load the pub list" in capsys.readouterr().out
 
 
-@patch("main.search_pubs")
-@patch("main.load_pubs")
-@patch("main.oxford_map.start_map_server")
+@patch("beer_app.main.search_pubs")
+@patch("beer_app.main.load_pubs")
+@patch("beer_app.main.oxford_map.start_map_server")
 @patch("builtins.input", side_effect=["1", "2", "4", "--help", "jericho", "q"])
 def test_search_help_does_not_change_map(input_mock, start_map_server, load_pubs, search_pubs, capsys):
     pubs = [object()]
@@ -136,9 +136,9 @@ def test_search_help_does_not_change_map(input_mock, start_map_server, load_pubs
     assert "pub name" in output
 
 
-@patch("main.search_pubs")
-@patch("main.load_pubs")
-@patch("main.oxford_map.start_map_server")
+@patch("beer_app.main.search_pubs")
+@patch("beer_app.main.load_pubs")
+@patch("beer_app.main.oxford_map.start_map_server")
 @patch("builtins.input", side_effect=["1", "2", "4", "--list location", "jericho", "q"])
 def test_search_list_command_stays_in_search_mode(input_mock, start_map_server, load_pubs, search_pubs, capsys):
     pubs = [

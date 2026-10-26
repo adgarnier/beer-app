@@ -36,7 +36,7 @@ jobs:
 
       - name: Run coverage
         run: |
-          pytest --cov=ci_course --cov-report=xml
+          pytest --cov=beer_app --cov-report=xml
 
       - name: Upload coverage reports to Codecov
         # Third-party action, and the one step here that sees a secret.
