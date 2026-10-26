@@ -1,4 +1,5 @@
-ID,Visited
-54,true
-83,true
-117,true
+ID,Visited,VisitDate
+115,false,2026-10-26
+116,true,2026-10-26
+117,true,2026-10-26
+117,true,2026-10-26
