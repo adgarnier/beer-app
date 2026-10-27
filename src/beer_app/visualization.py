@@ -80,4 +80,5 @@ def p_visits_over_time(visited_pub_times): #will take visited_pub_times() from b
 #print(visited_pub_times())
 #from beer_app.stats import visited_pub_times
 #p_visits_over_time(visited_pub_times())
-#rufffplt.show()
+#plt.show()
+#exit
