@@ -2,7 +2,14 @@
 
 from unittest.mock import MagicMock, patch
 
-from beer_app.oxford_map import BackgroundMapServer, MapState, build_map_page, main, start_map_server
+from beer_app.oxford_map import (
+    BackgroundMapServer,
+    MapState,
+    build_map_page,
+    build_template_asset,
+    main,
+    start_map_server,
+)
 from beer_app.pub_data import Pub
 
 
@@ -10,12 +17,21 @@ def test_map_page_contains_leaflet_and_oxford_coordinates():
     page = build_map_page()
 
     assert "leaflet@1.9.4" in page
-    assert "51.752" in page
-    assert "-1.2577" in page
-    assert "tile.openstreetmap.org" in page
-    assert "OpenStreetMap contributors" in page
-    assert 'fetch("/api/pubs")' in page
-    assert "setInterval(updateMap, 1000)" in page
+    assert 'href="oxford_map.css"' in page
+    assert 'src="oxford_map.js"' in page
+    assert "<style>" not in page
+    assert "<script>" not in page
+
+
+def test_map_javascript_contains_oxford_map_behaviour():
+    javascript = build_template_asset("oxford_map.js").decode("utf-8")
+
+    assert "51.752" in javascript
+    assert "-1.2577" in javascript
+    assert "tile.openstreetmap.org" in javascript
+    assert "OpenStreetMap contributors" in javascript
+    assert 'fetch("/api/pubs")' in javascript
+    assert "setInterval(updateMap, 1000)" in javascript
 
 
 @patch("beer_app.oxford_map.run_map_server")

@@ -26,6 +26,16 @@ def build_map_page() -> str:
     return template.read_text(encoding="utf-8")
 
 
+def build_template_asset(filename: str) -> bytes:
+    """Return a template asset used by the local Oxford map server."""
+    if __package__:
+        asset = files("beer_app").joinpath("templates", filename)
+        return asset.read_bytes()
+
+    asset = Path(__file__).with_name("templates") / filename
+    return asset.read_bytes()
+
+
 class MapRequestHandler(BaseHTTPRequestHandler):
     """Serve the map page and a lightweight health check."""
 
@@ -55,6 +65,20 @@ class MapRequestHandler(BaseHTTPRequestHandler):
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.send_header("Cache-Control", "no-store")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+
+        template_assets = {
+            "/oxford_map.css": ("oxford_map.css", "text/css; charset=utf-8"),
+            "/oxford_map.js": ("oxford_map.js", "text/javascript; charset=utf-8"),
+        }
+        if self.path in template_assets:
+            filename, content_type = template_assets[self.path]
+            content = build_template_asset(filename)
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(content)))
             self.end_headers()
             self.wfile.write(content)
