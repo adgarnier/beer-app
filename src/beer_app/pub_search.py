@@ -13,6 +13,7 @@ SEARCH_HELP = """Search help
 You can search the loaded pubs by:
 - pub name, for example: lamb and flag
 - location, for example: jericho
+- road, for example: cowley road
 - sponsor or owner, for example: greene king
 - words in the notes, for example: beer garden
 
@@ -24,10 +25,11 @@ Search commands:
 - --list              show the fields that can be listed
 - --list name         show every pub name
 - --list location     show available locations
+- --list road         show available roads
 - --list sponsor      show available sponsors or owners
 """
 
-LISTABLE_FIELDS = ("name", "location", "sponsor")
+LISTABLE_FIELDS = ("name", "location", "road", "sponsor")
 
 
 def is_help_query(query: str) -> bool:
@@ -83,7 +85,7 @@ def search_pubs(pubs: Iterable[Pub], query: str) -> list[Pub]:
 
     matches = []
     for pub in pub_list:
-        searchable_text = " ".join((pub.name, pub.location, pub.sponsor, pub.notes)).casefold()
+        searchable_text = " ".join((pub.name, pub.road, pub.location, pub.sponsor, pub.notes)).casefold()
         if all(term in searchable_text for term in terms):
             matches.append(pub)
     return matches
@@ -94,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Search the Oxford pub list.", add_help=False)
     parser.add_argument("--help", action="store_true", help="show search guidance")
     parser.add_argument("--list", nargs="?", const="fields", choices=("fields", *LISTABLE_FIELDS))
-    parser.add_argument("query", nargs="*", help="words to find in pub names, locations, sponsors, or notes")
+    parser.add_argument("query", nargs="*", help="words to find in pub names, roads, locations, sponsors, or notes")
     args = parser.parse_args(argv)
 
     if args.help:
