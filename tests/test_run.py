@@ -142,7 +142,7 @@ def test_search_help_does_not_change_map(input_mock, start_map_server, load_pubs
 @patch("builtins.input", side_effect=["1", "2", "4", "--list location", "jericho", "q"])
 def test_search_list_command_stays_in_search_mode(input_mock, start_map_server, load_pubs, search_pubs, capsys):
     pubs = [
-        Pub(1, "Example", "Jericho", "Independent", "", 51.76, -1.26),
+        Pub(1, "Example", "Jericho Street", "Jericho", "Independent", "", 51.76, -1.26),
     ]
     load_pubs.return_value = pubs
     search_pubs.return_value = pubs
