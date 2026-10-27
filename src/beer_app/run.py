@@ -59,7 +59,7 @@ def main() -> int:
                 print("\nGoodbye!")
                 return 0
 
-            if choice == "1":
+            if choice == "1" or choice == "launch":
                 if map_server is None:
                     print("Launching the Oxford map...")
                     map_server = oxford_map.start_map_server(port=0)
@@ -68,7 +68,7 @@ def main() -> int:
                     print(f"The Oxford map is already running at {map_server.url}")
                 continue
 
-            if choice == "2":
+            if choice == "2" or choice == "load":
                 if map_server is None:
                     print("Launch the Oxford map before loading the pub list.")
                 else:
@@ -77,7 +77,7 @@ def main() -> int:
                     print(f"Added {len(loaded_pubs)} pubs to the Oxford map.")
                 continue
 
-            if choice == "3":
+            if choice == "3" or choice == "unload":
                 if map_server is None:
                     print("Launch the Oxford map before unloading the pub list.")
                 else:
@@ -86,7 +86,7 @@ def main() -> int:
                     print("Removed all pubs from the Oxford map.")
                 continue
 
-            if choice == "4":
+            if choice == "4" or choice == "search":
                 if map_server is None:
                     print("Launch the Oxford map before searching the pub list.")
                 elif not loaded_pubs:
@@ -120,11 +120,11 @@ def main() -> int:
                         print(f"Showing all {len(matches)} pubs.")
                 continue
 
-            if choice == "5":
+            if choice == "5" or choice == "visit":
                 manage_visited(loaded_pubs or load_pubs())
                 continue
 
-            if choice == "q":
+            if choice == "q" or choice == "quit":
                 print("Goodbye!")
                 return 0
 
