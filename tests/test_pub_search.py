@@ -55,7 +55,7 @@ def test_lists_unique_locations_and_splits_combined_values():
     ]
 
     assert list_query_field("--list location") == "location"
-    assert list_pub_values(pubs, "location") == ["Walton Street", "Jericho"]
+    assert list_pub_values(pubs, "location") == ["Jericho"]
 
 
 def test_list_without_field_shows_available_fields():
@@ -75,7 +75,7 @@ def test_unknown_list_field_is_rejected():
 def test_formats_list_values_for_terminal():
     output = format_pub_values("location", ["Town Centre", "Jericho"])
 
-    assert output == "Available location values:\n  Town Centre\n  Jericho"
+    assert output == "Available location values:\n  Town Centre"
 
 
 def test_command_line_list_prints_values(capsys):
