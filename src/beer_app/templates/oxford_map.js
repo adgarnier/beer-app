@@ -16,6 +16,19 @@ function createPopup(pub) {
   heading.textContent = pub.name;
   popup.appendChild(heading);
 
+  if (pub.visited) {
+    const visited = document.createElement("p");
+    visited.className = "visited-marker";
+    const image = document.createElement("img");
+    image.src = "/images/visitbadge.png";
+    image.alt = "Visited";
+    image.width = 24;
+    image.height = 24;
+    visited.appendChild(image);
+    visited.appendChild(document.createTextNode(" Visited"));
+    popup.appendChild(visited);
+  }
+
   if (pub.road || pub.location) {
     const address = document.createElement("p");
     address.className = "address";
