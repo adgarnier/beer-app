@@ -3,7 +3,6 @@
 from beer_app.pub_data import Pub
 from beer_app.pub_search import (
     SEARCH_HELP,
-    format_pub_values,
     is_help_query,
     list_pub_values,
     list_query_field,
