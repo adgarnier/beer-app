@@ -17,3 +17,17 @@ body { font-family: system-ui, sans-serif; }
 .pub-popup .notes { max-width: 22rem; margin-top: 0.5rem; }
 .pub-popup .visited-marker { display: flex; align-items: center; gap: 0.35rem; font-weight: 700; color: #28613b; }
 .pub-popup .visited-marker img { display: block; object-fit: contain; }
+.pub-popup .visited-today-button {
+  background: #28613b;
+  border: 0;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  margin-top: 0.65rem;
+  padding: 0.5rem 0.75rem;
+}
+.pub-popup .visited-today-button:hover:not(:disabled) { background: #1d482b; }
+.pub-popup .visited-today-button:focus-visible { outline: 3px solid #9bc7aa; outline-offset: 2px; }
+.pub-popup .visited-today-button:disabled { background: #6f8c78; cursor: default; }

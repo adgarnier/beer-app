@@ -6,8 +6,10 @@ import argparse
 import contextlib
 import json
 import mimetypes
+import re
 import threading
 import webbrowser
+from datetime import date
 from dataclasses import dataclass, field
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib.resources import files
@@ -15,7 +17,7 @@ from pathlib import Path
 
 if __package__:
     from .pub_data import Pub
-    from .visited_pubs import load_visit_history
+    from .visited_pubs import load_visit_history, record_visit_today
 
 
 def build_map_page() -> str:
@@ -120,6 +122,29 @@ class MapRequestHandler(BaseHTTPRequestHandler):
 
         self.send_error(404)
 
+    def do_POST(self) -> None:  # noqa: N802 - method name is defined by BaseHTTPRequestHandler
+        """Record a visit submitted by a map popup."""
+        match = re.fullmatch(r"/api/pubs/(\d+)/visit", self.path)
+        if match is None:
+            self.send_error(404)
+            return
+
+        pub_id = int(match.group(1))
+        map_state = self.server.map_state  # type: ignore[attr-defined]
+        try:
+            recorded = map_state.record_visit_today(pub_id)
+        except KeyError:
+            self.send_error(404, "Pub is not currently loaded")
+            return
+
+        content = json.dumps({"recorded": recorded, "visited_today": True}).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(content)))
+        self.end_headers()
+        self.wfile.write(content)
+
     def log_message(self, format: str, *args: object) -> None:
         """Suppress routine browser request logs."""
 
@@ -139,9 +164,21 @@ class MapState:
             self.pubs = list(pubs)
             self.version += 1
 
+    def record_visit_today(self, pub_id: int) -> bool:
+        """Record today's visit for a pub currently displayed on the map."""
+        with self.lock:
+            if not any(pub.id == pub_id for pub in self.pubs):
+                raise KeyError(pub_id)
+        recorded = record_visit_today(pub_id)
+        with self.lock:
+            self.visited_statuses[pub_id] = True
+            self.version += 1
+        return recorded
+
     def snapshot(self) -> dict[str, int | list[dict[str, int | float | str | bool]]]:
         """Return a consistent JSON-ready snapshot of the map state."""
-        visited_statuses, _ = load_visit_history()
+        visited_statuses, visit_dates = load_visit_history()
+        today = date.today().isoformat()
         with self.lock:
             if visited_statuses != self.visited_statuses:
                 self.visited_statuses = visited_statuses
@@ -149,7 +186,11 @@ class MapState:
             return {
                 "version": self.version,
                 "pubs": [
-                    {**pub.as_dict(), "visited": self.visited_statuses.get(pub.id, False)}
+                    {
+                        **pub.as_dict(),
+                        "visited": self.visited_statuses.get(pub.id, False),
+                        "visited_today": today in visit_dates.get(pub.id, []),
+                    }
                     for pub in self.pubs
                 ],
             }
