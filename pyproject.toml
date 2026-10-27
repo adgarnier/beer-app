@@ -36,7 +36,7 @@ oxford-pub-map = "beer_app.oxford_map:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-beer_app = ["data/*.csv", "templates/*.html", "templates/*.css", "templates/*.js"]
+beer_app = ["data/*.csv", "templates/*.html", "templates/*.css", "templates/*.js", "images/*"]
 
 [tool.ruff]
 line-length = 120

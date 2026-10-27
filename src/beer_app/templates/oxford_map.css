@@ -15,3 +15,5 @@ body { font-family: system-ui, sans-serif; }
 .pub-popup .address { color: #777; }
 .pub-popup .field-label { font-weight: 600; }
 .pub-popup .notes { max-width: 22rem; margin-top: 0.5rem; }
+.pub-popup .visited-marker { display: flex; align-items: center; gap: 0.35rem; font-weight: 700; color: #28613b; }
+.pub-popup .visited-marker img { display: block; object-fit: contain; }
