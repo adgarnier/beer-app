@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import json
+import mimetypes
 import threading
 import webbrowser
 from dataclasses import dataclass, field
@@ -14,6 +15,7 @@ from pathlib import Path
 
 if __package__:
     from .pub_data import Pub
+    from .visited_pubs import load_visit_history
 
 
 def build_map_page() -> str:
@@ -33,6 +35,19 @@ def build_template_asset(filename: str) -> bytes:
         return asset.read_bytes()
 
     asset = Path(__file__).with_name("templates") / filename
+    return asset.read_bytes()
+
+
+def build_static_asset(filename: str) -> bytes:
+    """Return a static image asset used by the map."""
+    if filename != "visitbadge.png":
+        raise FileNotFoundError(filename)
+
+    if __package__:
+        asset = files("beer_app").joinpath("images", filename)
+        return asset.read_bytes()
+
+    asset = Path(__file__).with_name("images") / filename
     return asset.read_bytes()
 
 
@@ -84,6 +99,20 @@ class MapRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(content)
             return
 
+        if self.path == "/images/visitbadge.png":
+            try:
+                content = build_static_asset("visitbadge.png")
+            except FileNotFoundError:
+                self.send_error(404, "Visited marker image is missing")
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", mimetypes.guess_type("visitbadge.png")[0] or "image/png")
+            self.send_header("Cache-Control", "public, max-age=3600")
+            self.send_header("Content-Length", str(len(content)))
+            self.end_headers()
+            self.wfile.write(content)
+            return
+
         if self.path == "/favicon.ico":
             self.send_response(204)
             self.end_headers()
@@ -101,6 +130,7 @@ class MapState:
 
     pubs: list[Pub] = field(default_factory=list)
     version: int = 0
+    visited_statuses: dict[int, bool] = field(default_factory=lambda: load_visit_history()[0])
     lock: threading.Lock = field(default_factory=threading.Lock, repr=False)
 
     def replace_pubs(self, pubs: list[Pub]) -> None:
@@ -109,12 +139,19 @@ class MapState:
             self.pubs = list(pubs)
             self.version += 1
 
-    def snapshot(self) -> dict[str, int | list[dict[str, int | float | str]]]:
+    def snapshot(self) -> dict[str, int | list[dict[str, int | float | str | bool]]]:
         """Return a consistent JSON-ready snapshot of the map state."""
+        visited_statuses, _ = load_visit_history()
         with self.lock:
+            if visited_statuses != self.visited_statuses:
+                self.visited_statuses = visited_statuses
+                self.version += 1
             return {
                 "version": self.version,
-                "pubs": [pub.as_dict() for pub in self.pubs],
+                "pubs": [
+                    {**pub.as_dict(), "visited": self.visited_statuses.get(pub.id, False)}
+                    for pub in self.pubs
+                ],
             }
 
 

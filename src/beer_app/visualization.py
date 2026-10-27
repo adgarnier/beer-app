@@ -75,5 +75,9 @@ def p_visits_over_time(visited_pub_times): #will take visited_pub_times() from b
     return fig
 
 #Calculate pub visits per visited pub just for expirment
-# p_visits_per_pub(pub_counts())
-# plt.show()
+#p_visits_per_pub(pub_counts())
+#print(pub_counts())
+#print(visited_pub_times())
+#from beer_app.stats import visited_pub_times
+#p_visits_over_time(visited_pub_times())
+#plt.show()
