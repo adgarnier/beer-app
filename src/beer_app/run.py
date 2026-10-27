@@ -14,6 +14,7 @@ from beer_app.pub_search import (
     search_pubs,
 )
 from beer_app.visited_pubs import VISIT_HELP, manage_visited
+from beer_app.stats import pub_counts, visited_pub_times
 from beer_app.visualization import STATS_HELP, launch_stats_graph, show_visits_over_time, show_visits_per_pub
 import matplotlib.pyplot as plt
 

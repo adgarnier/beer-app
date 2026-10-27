@@ -87,18 +87,17 @@ def p_visits_over_time(visited_pub_times): #will take visited_pub_times() from b
     return fig
 
 def show_visits_per_pub():
+    """Plots visits per pub."""
     p_visits_per_pub(pub_counts())
     plt.show()
 
 def show_visits_over_time():
+    """Plots pub visits overtime."""
     p_visits_over_time(visited_pub_times())
     plt.show()
 
 def launch_stats_graph(target):
+    """Launches the stats graph."""
     process = Process(target=target, daemon=True)
     process.start()
     return process
-
-#Calculate pub visits per visited pub just for expirment
-# p_visits_per_pub(pub_counts())
-# plt.show()
