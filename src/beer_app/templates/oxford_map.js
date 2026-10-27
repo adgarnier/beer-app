@@ -52,7 +52,31 @@ function createPopup(pub) {
     notes.appendChild(document.createTextNode(pub.notes));
     popup.appendChild(notes);
   }
-// add visited status here
+
+  const visitButton = document.createElement("button");
+  visitButton.className = "visited-today-button";
+  visitButton.type = "button";
+  visitButton.disabled = pub.visited_today;
+  visitButton.textContent = pub.visited_today ? "Visited today ✓" : "Visited today";
+  visitButton.addEventListener("click", async () => {
+    visitButton.disabled = true;
+    visitButton.textContent = "Saving…";
+    try {
+      const response = await fetch(`/api/pubs/${pub.id}/visit`, { method: "POST" });
+      if (!response.ok) {
+        throw new Error(`Could not record visit: ${response.status}`);
+      }
+      pub.visited = true;
+      pub.visited_today = true;
+      visitButton.textContent = "Visited today ✓";
+    } catch (error) {
+      console.error(error);
+      visitButton.disabled = false;
+      visitButton.textContent = "Try again";
+    }
+  });
+  popup.appendChild(visitButton);
+
   return popup;
 }
 
