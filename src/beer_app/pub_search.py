@@ -29,7 +29,7 @@ Search commands:
   --list sponsor      show available sponsors or owners
 """
 
-LISTABLE_FIELDS = ("name", "location", "road", "sponsor")
+LISTABLE_FIELDS = ("name", "road", "location", "sponsor")
 
 
 def is_help_query(query: str) -> bool:
