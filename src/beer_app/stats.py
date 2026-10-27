@@ -15,7 +15,7 @@ def visited_pub_path():
     return visited_pub_path
 
 def visited_pub_count(visited_pubs_path):
-    """Cound visited trips to each pub as a panda df"""
+    """Count visited trips to each pub as a panda df"""
     
     #Load in visit data
     df = pd.read_csv(visited_pubs_path)
@@ -50,3 +50,32 @@ def visited_pub_count(visited_pubs_path):
     pub_counts = pub_counts.drop(columns=["id"])
 
     return pub_counts
+
+def visited_pub_times():
+    """Returns list of pubs with names and dates"""
+    #Load in visit data
+    df = pd.read_csv(visited_pub_path())
+    
+    #Load in pub data
+    pubs = load_pubs()
+    
+    #Convert list of Pub objects into a DataFrame
+    pubs_df = pd.DataFrame([pub.as_dict() for pub in pubs])
+
+        #Filter for pubs visited are only 'true'
+    filt_df = df[
+        df["Visited"].astype(str).str.lower() == "true"
+    ]
+
+    #Merge visit counts with pub names
+    filt_df = pd.merge(
+        filt_df,
+        pubs_df[["id", "name"]],
+        left_on="ID",
+        right_on="id",
+        how="left"
+    )
+    #Remove duplicate ID column
+    pub_timestamps = filt_df.drop(columns=["id"])
+
+    return pub_timestamps
