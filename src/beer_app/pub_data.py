@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 REQUIRED_COLUMNS = {"ID", "Pub", "Road", "Location", "Sponsor", "Notes", "Latitude", "Longitude"}
-
+pub_list = "pub_list_v2.csv"
 
 @dataclass(frozen=True)
 class Pub:
@@ -32,8 +32,8 @@ class Pub:
 def _default_pub_list():
     """Return the packaged pub-list resource."""
     if __package__:
-        return files("beer_app").joinpath("data", "pub_list_v3.csv")
-    return Path(__file__).with_name("data") / "pub_list_v3.csv"
+        return files("beer_app").joinpath("data", pub_list)
+    return Path(__file__).with_name("data") / pub_list
 
 
 def load_pubs(path: str | Path | None = None) -> list[Pub]:
@@ -82,4 +82,4 @@ def _pub_from_row(row: dict[str, str], row_number: int) -> Pub:
 
 if __name__ == "__main__":
     loaded_pubs = load_pubs()
-    print(f"Loaded {len(loaded_pubs)} pubs from pub_list_v3.csv")
+    print(f"Loaded {len(loaded_pubs)} pubs from {pub_list}")
