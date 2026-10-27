@@ -9,9 +9,9 @@ def test_loads_packaged_pub_list():
     pubs = load_pubs()
 
     assert len(pubs) == 101
-    assert pubs[0].name == "The Lamb and Flag"
-    assert pubs[0].latitude == pytest.approx(51.7574213)
-    assert pubs[0].longitude == pytest.approx(-1.2592651)
+    assert pubs[0].name == "Duke of Monmouth"
+    assert pubs[0].latitude == pytest.approx(51.736673)
+    assert pubs[0].longitude == pytest.approx(-1.251886)
 
 
 def test_rejects_csv_without_required_columns(tmp_path):

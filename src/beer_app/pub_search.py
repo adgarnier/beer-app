@@ -73,7 +73,7 @@ def format_pub_values(field: str, values: Iterable[str]) -> str:
     heading = "Available list fields" if field == "fields" else f"Available {field} values"
     if not value_list:
         return f"{heading}:\n- none"
-    return f"{heading}:\n" + "\n".join(f"  {value}" for value in value_list)
+    return f"{heading}:\n" + "\n".join(f"- {value}" for value in value_list)
 
 
 def search_pubs(pubs: Iterable[Pub], query: str) -> list[Pub]:
