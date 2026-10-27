@@ -52,7 +52,7 @@ function createPopup(pub) {
     notes.appendChild(document.createTextNode(pub.notes));
     popup.appendChild(notes);
   }
-
+// add visited status here
   return popup;
 }
 

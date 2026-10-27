@@ -3,8 +3,20 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
+from multiprocessing import Process
 from matplotlib.ticker import MaxNLocator
+from beer_app.stats import pub_counts, visited_pub_times
 
+STATS_HELP = """Stats help
+
+Pick between the two graph options by entering 'stats'
+followed by your choice of 'pub' or 'time'.
+
+Commands:
+  --help  shows this output
+  pub     shows a graph for visits per pub
+  time    shows a graph for visits over time
+"""
 
 def p_visits_per_pub(pub_count): #will take pub_counts() from beer_app.stats
     """Plot the number of Pub'lishes per pub."""
@@ -74,10 +86,18 @@ def p_visits_over_time(visited_pub_times): #will take visited_pub_times() from b
     ax.legend(title="Pub", loc="best")
     return fig
 
-#Calculate pub visits per visited pub just for expirment
-#p_visits_per_pub(pub_counts())
-#print(pub_counts())
-#print(visited_pub_times())
-#from beer_app.stats import visited_pub_times
-#p_visits_over_time(visited_pub_times())
-#plt.show()
+def show_visits_per_pub():
+    """Plots visits per pub."""
+    p_visits_per_pub(pub_counts())
+    plt.show()
+
+def show_visits_over_time():
+    """Plots pub visits overtime."""
+    p_visits_over_time(visited_pub_times())
+    plt.show()
+
+def launch_stats_graph(target):
+    """Launches the stats graph."""
+    process = Process(target=target, daemon=True)
+    process.start()
+    return process
