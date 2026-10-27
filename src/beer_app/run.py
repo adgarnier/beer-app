@@ -14,8 +14,7 @@ from beer_app.pub_search import (
     search_pubs,
 )
 from beer_app.visited_pubs import VISIT_HELP, manage_visited
-from beer_app.stats import pub_counts
-from beer_app.visualization import p_visits_per_pub
+from beer_app.visualization import STATS_HELP, launch_stats_graph, show_visits_over_time, show_visits_per_pub
 import matplotlib.pyplot as plt
 
 
@@ -24,10 +23,10 @@ WELCOME_MESSAGE = r"""
  _____                                                       _____
 ( ___ )                                                     ( ___ )
  |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   |
- |   |   .-,--. ,-.  .   ,-,---.    .    ,-_/ .---. ,-_/,.   |   |
- |   |    '|__/   |  |    '|___/ ,' |    '  | \___  ' |_|/   |   |
- |   |    .|      |  | .  ,|   \    |    .- |     \  /| |    |   |
- |   |    `'      `--^-' `-^---'    `--' `--' `---'  `' `'   |   |
+ |   |   .-,--. ,-.  .   ,-,---.  , .    _,_  .---. ,-_/,.   |   |
+ |   |    '|__/   |  |    '|___/ ,' |     |   \___  ' |_|/   |   |
+ |   |    .|      |  | .  ,|   \    |     |       \  /| |    |   |
+ |   |    `'      `--^-' `-^---'    `--' -'-  `---'  `' `'   |   |
  |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___|
 (_____)                                                     (_____)
                   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -125,7 +124,7 @@ def main() -> int:
                 continue
 
             if choice == "stats --help":
-                print("Need to implement help in visualization.py")
+                print(STATS_HELP)
                 continue
 
             if choice == "1" or choice == "launch":
@@ -172,7 +171,7 @@ def main() -> int:
                 else:
                     while True:
                         try:
-                            prompt = 'Search by name, road, location, sponsor, or notes. Type "--help" for more info: '
+                            prompt = "Search by name, road, location, sponsor, or notes. Type '--help' for more info: "
                             query = input(prompt).strip()
                         except (EOFError, KeyboardInterrupt):
                             print("\nGoodbye!")
@@ -202,11 +201,33 @@ def main() -> int:
                 manage_visited(loaded_pubs or load_pubs())
                 continue
 
-            if choice == "6" or choice =="stats":
-                print("Working on adding this feature, please check back later.")
-                p_visits_per_pub(pub_counts())
-                # this plt should be moved to visualization
-                plt.show()
+            if choice in {"6", "stats"}:
+                while True:
+                    try:
+                        stats_choice = input(
+                            "Choose 'visits per pub (pub)' or 'visits over time (time)'. "
+                            "Type '--help' for more info: "
+                        ).strip().lower()
+                    except (EOFError, KeyboardInterrupt):
+                        print("\nGoodbye!")
+                        return 0
+
+                    if stats_choice in {"h", "help", "--help"}:
+                        print(STATS_HELP)
+                        continue
+                    elif stats_choice in {"visit per pub", "visits per pub", "pub"}:
+                        launch_stats_graph(show_visits_per_pub)
+                        plt.show()
+                        break
+                    elif stats_choice in {"visit over time", "visits over time", "time"}:
+                        launch_stats_graph(show_visits_over_time)
+                        plt.show()
+                        break
+                    elif stats_choice in {"q", "quit", "exit", "bye", "cya"}:
+                        print("Leaving stats!")
+                        break
+                    else:
+                        print("Unknown stats option. Choose 'visits per pub' or 'visits over time'. Exit with 'quit'.")
                 continue
 
             if choice == "q" or choice == "quit":
