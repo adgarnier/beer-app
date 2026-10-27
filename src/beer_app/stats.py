@@ -51,7 +51,7 @@ def visited_pub_count(visited_pubs_path):
     return pub_counts
 
 def visited_pub_times():
-    """Returns list of pubs with names and dates."""
+    """Return list of pubs with names and dates."""
     #Load in visit data
     df = pd.read_csv(visited_pub_path())
 
