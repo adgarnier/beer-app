@@ -50,8 +50,8 @@ def test_command_line_help_keyword_prints_search_guidance(capsys):
 
 def test_lists_unique_locations_and_splits_combined_values():
     pubs = [
-        Pub(1, "One", "Jericho; Walton Street", "Independent", "", 51.76, -1.26),
-        Pub(2, "Two", "Jericho", "Independent", "", 51.75, -1.25),
+        Pub(1, "One", "Walton Street", "Jericho", "Independent", "", 51.76, -1.26),
+        Pub(2, "Two", "Jericho Street", "Jericho", "Independent", "", 51.75, -1.25),
     ]
 
     assert list_query_field("--list location") == "location"
@@ -60,7 +60,7 @@ def test_lists_unique_locations_and_splits_combined_values():
 
 def test_list_without_field_shows_available_fields():
     assert list_query_field("--list") == "fields"
-    assert list_pub_values(PUBS, "fields") == ["name", "location", "sponsor"]
+    assert list_pub_values(PUBS, "fields") == ["name", "road", "location", "sponsor"]
 
 
 def test_unknown_list_field_is_rejected():
