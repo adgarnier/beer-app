@@ -72,7 +72,7 @@ def format_pub_values(field: str, values: Iterable[str]) -> str:
     value_list = list(values)
     heading = "Available list fields" if field == "fields" else f"Available {field} values"
     if not value_list:
-        return f"{heading}:\n- none"
+        return f"{heading}:\n  none"
     return f"{heading}:\n" + "\n".join(f" {value}" for value in value_list)
 
 
@@ -112,7 +112,7 @@ def main(argv: list[str] | None = None) -> int:
     matches = search_pubs(pubs, query)
     print(f"Found {len(matches)} matching pubs:")
     for pub in matches:
-        print(f"- {pub.name} ({pub.location})")
+        print(f"  {pub.name} ({pub.location})")
     return 0
 
 
