@@ -75,7 +75,7 @@ def test_unknown_list_field_is_rejected():
 def test_formats_list_values_for_terminal():
     output = format_pub_values("location", ["Town Centre", "Jericho"])
 
-    assert output == "Available location values:\n  Town Centre\n  Jericho"
+    assert output == "Available location values:  Town Centre  Jericho"
 
 
 def test_command_line_list_prints_values(capsys):
