@@ -16,5 +16,5 @@ def p_visits_per_pub(pub_count):
     return fig
 
 #Calculate pub visits per visited pub just for expirment
-p_visits_per_pub(pub_counts())
-plt.show()
+# p_visits_per_pub(pub_counts())
+# plt.show()

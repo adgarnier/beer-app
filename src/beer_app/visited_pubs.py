@@ -9,6 +9,13 @@ from pathlib import Path
 
 from .pub_data import Pub
 
+VISIT_HELP = """VISIT help
+
+Mark off which pubs you have visited by typing the corresponding ID.
+
+Commands:
+  visit --help
+"""
 
 def _default_visited_path() -> Path:
     """Return the visited-pubs CSV next to the packaged pub lists."""
