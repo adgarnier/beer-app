@@ -7,6 +7,14 @@ from dataclasses import asdict, dataclass
 from importlib.resources import files
 from pathlib import Path
 
+LAUNCH_HELP = """Launch help
+
+Just type launch mate.
+
+Commands:
+  launch
+  launch --help
+"""
 
 REQUIRED_COLUMNS = {"ID", "Pub", "Road", "Location", "Sponsor", "Notes", "Latitude", "Longitude"}
 pub_list = "pub_list_v3.csv"

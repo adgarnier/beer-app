@@ -56,7 +56,7 @@ def test_starts_map_server_in_background(server_class):
 
 def test_map_state_is_empty_until_pubs_are_added():
     state = MapState()
-    pub = Pub(1, "Example Pub", "Oxford", "Independent", "Notes", 51.75, -1.25)
+    pub = Pub(1, "Example Pub", "Example Road", "Oxford", "Independent", "Notes", 51.75, -1.25)
 
     assert state.snapshot() == {"version": 0, "pubs": []}
 
@@ -70,7 +70,7 @@ def test_map_state_is_empty_until_pubs_are_added():
 
 def test_background_server_can_clear_pubs():
     state = MapState()
-    pub = Pub(1, "Example Pub", "Oxford", "Independent", "Notes", 51.75, -1.25)
+    pub = Pub(1, "Example Pub", "Example Road", "Oxford", "Independent", "Notes", 51.75, -1.25)
     background_server = BackgroundMapServer(
         server=MagicMock(),
         thread=MagicMock(),

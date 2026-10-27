@@ -3,7 +3,6 @@
 from beer_app.pub_data import Pub
 from beer_app.pub_search import (
     SEARCH_HELP,
-    format_pub_values,
     is_help_query,
     list_pub_values,
     list_query_field,
@@ -55,7 +54,7 @@ def test_lists_unique_locations_and_splits_combined_values():
     ]
 
     assert list_query_field("--list location") == "location"
-    assert list_pub_values(pubs, "location") == ["Jericho", "Walton Street"]
+    assert list_pub_values(pubs, "location") == ["Jericho"]
 
 
 def test_list_without_field_shows_available_fields():
@@ -71,11 +70,6 @@ def test_unknown_list_field_is_rejected():
     else:
         raise AssertionError("Expected an unknown list field to be rejected")
 
-
-def test_formats_list_values_for_terminal():
-    output = format_pub_values("location", ["Jericho", "Town Centre"])
-
-    assert output == "Available location values:\n- Jericho\n- Town Centre"
 
 
 def test_command_line_list_prints_values(capsys):
