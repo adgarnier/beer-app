@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 REQUIRED_COLUMNS = {"ID", "Pub", "Road", "Location", "Sponsor", "Notes", "Latitude", "Longitude"}
-pub_list = "pub_list_v2.csv"
+pub_list = "pub_list_v3.csv"
 
 @dataclass(frozen=True)
 class Pub:

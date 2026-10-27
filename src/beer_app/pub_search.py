@@ -11,22 +11,22 @@ from .pub_data import Pub, load_pubs
 SEARCH_HELP = """Search help
 
 You can search the loaded pubs by:
-- pub name, for example: lamb and flag
-- location, for example: jericho
-- road, for example: cowley road
-- sponsor or owner, for example: greene king
-- words in the notes, for example: beer garden
+  pub name, for example: lamb and flag
+  location, for example: jericho
+  road, for example: cowley road
+  sponsor or owner, for example: greene king
+  words in the notes, for example: beer garden
 
 Searches ignore capital letters. When you enter several words, a pub must match
 all of them. Submit a blank search to show every loaded pub again.
 
 Search commands:
-- --help              show this guidance
-- --list              show the fields that can be listed
-- --list name         show every pub name
-- --list location     show available locations
-- --list road         show available roads
-- --list sponsor      show available sponsors or owners
+  --help              show this guidance
+  --list              show the fields that can be listed
+  --list name         show every pub name
+  --list location     show available locations
+  --list road         show available roads
+  --list sponsor      show available sponsors or owners
 """
 
 LISTABLE_FIELDS = ("name", "location", "road", "sponsor")
@@ -73,7 +73,7 @@ def format_pub_values(field: str, values: Iterable[str]) -> str:
     heading = "Available list fields" if field == "fields" else f"Available {field} values"
     if not value_list:
         return f"{heading}:\n- none"
-    return f"{heading}:\n" + "\n".join(f"- {value}" for value in value_list)
+    return f"{heading}:\n" + "\n".join(f"  {value}" for value in value_list)
 
 
 def search_pubs(pubs: Iterable[Pub], query: str) -> list[Pub]:
