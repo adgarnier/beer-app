@@ -13,15 +13,15 @@ from beer_app.pub_search import (
 
 
 PUBS = [
-    Pub(1, "The Garden Arms", "North Oxford", "Independent", "Large beer garden", 51.76, -1.26),
-    Pub(2, "City Tavern", "Town Centre", "Greene King", "Historic interior", 51.75, -1.25),
-    Pub(3, "Jericho Ale House", "Jericho", "Independent", "Local ales", 51.77, -1.27),
+    Pub(1, "The Gardeners Arms", "Plantation Road", "Jericho", "Independent", "Large beer garden", 51.76, -1.26),
+    Pub(2, "City Tavern", "High Street", "Town Centre", "Greene King", "Historic interior", 51.75, -1.25),
+    Pub(3, "Jericho Ale House", "Jericho Road", "Jericho", "Independent", "Local ales", 51.77, -1.27),
 ]
 
 
 def test_searches_across_pub_fields_without_case_sensitivity():
     assert [pub.name for pub in search_pubs(PUBS, "GREENE")] == ["City Tavern"]
-    assert [pub.name for pub in search_pubs(PUBS, "beer garden")] == ["The Garden Arms"]
+    assert [pub.name for pub in search_pubs(PUBS, "beer garden")] == ["The Gardeners Arms"]
     assert [pub.name for pub in search_pubs(PUBS, "jericho local")] == ["Jericho Ale House"]
 
 

@@ -94,7 +94,7 @@ def main() -> int:
                 else:
                     while True:
                         try:
-                            prompt = 'Search by name, location, sponsor, or notes. Type "--help" for more info: '
+                            prompt = 'Search by name, road, location, sponsor, or notes. Type "--help" for more info: '
                             query = input(prompt).strip()
                         except (EOFError, KeyboardInterrupt):
                             print("\nGoodbye!")
