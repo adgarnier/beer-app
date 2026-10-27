@@ -8,7 +8,7 @@ from importlib.resources import files
 from pathlib import Path
 
 
-REQUIRED_COLUMNS = {"ID", "Pub", "Location", "Sponsor", "Notes", "Latitude", "Longitude"}
+REQUIRED_COLUMNS = {"ID", "Pub", "Road", "Location", "Sponsor", "Notes", "Latitude", "Longitude"}
 pub_list = "pub_list_v2.csv"
 
 @dataclass(frozen=True)
@@ -17,6 +17,7 @@ class Pub:
 
     id: int
     name: str
+    road: str
     location: str
     sponsor: str
     notes: str
@@ -70,6 +71,7 @@ def _pub_from_row(row: dict[str, str], row_number: int) -> Pub:
     return Pub(
         id=pub_id,
         name=name,
+        road=row["Road"].strip(),
         location=row["Location"].strip(),
         sponsor=row["Sponsor"].strip(),
         notes=row["Notes"].strip(),

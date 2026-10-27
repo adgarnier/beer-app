@@ -27,17 +27,14 @@ docs = [
 
 [project.scripts]
 ci-course = "beer_app.cli:main"
-beer-app = "main:main"
+beer-app = "beer_app.main:main"
 oxford-pub-map = "beer_app.oxford_map:main"
-
-[tool.setuptools]
-py-modules = ["main"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-beer_app = ["data/*.csv", "templates/*.html"]
+beer_app = ["data/*.csv", "templates/*.html", "templates/*.css", "templates/*.js"]
 
 [tool.ruff]
 line-length = 120
