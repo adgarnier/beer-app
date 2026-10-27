@@ -11,7 +11,9 @@ license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.12"
 dependencies = [
-    "numpy", "pandas", "csv", "matplotlib.dates", "matplotlib.pyplot"
+    "numpy",
+    "pandas",
+    "matplotlib"
 ]
 
 [project.optional-dependencies]
