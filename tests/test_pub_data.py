@@ -8,7 +8,7 @@ from beer_app.pub_data import load_pubs
 def test_loads_packaged_pub_list():
     pubs = load_pubs()
 
-    assert len(pubs) == 117
+    assert len(pubs) == 101
     assert pubs[0].name == "The Lamb and Flag"
     assert pubs[0].latitude == pytest.approx(51.7574213)
     assert pubs[0].longitude == pytest.approx(-1.2592651)
@@ -25,7 +25,7 @@ def test_rejects_csv_without_required_columns(tmp_path):
 def test_rejects_invalid_coordinates(tmp_path):
     pub_list = tmp_path / "pubs.csv"
     pub_list.write_text(
-        "Pub,Location,Sponsor,Notes,Latitude,Longitude,ID\nExample,Oxford,,,north,-1.25,1\n",
+        "Pub,Road,Location,Sponsor,Notes,Latitude,Longitude,ID\nExample,WaltonRd,Oxford,,,north,-1.25,1\n",
         encoding="utf-8",
     )
 
