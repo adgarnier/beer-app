@@ -4,10 +4,9 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
 from matplotlib.ticker import MaxNLocator
-from beer_app.stats import pub_counts, visited_pub_times
 
 
-def p_visits_per_pub(pub_count): #will take pub_counts()
+def p_visits_per_pub(pub_count): #will take pub_counts() from beer_app.stats
     """Plot the number of Pub'lishes per pub."""
     fig = plt.figure(figsize=(10,6))
     plt.bar(pub_count["name"], pub_count["Count"])
@@ -18,7 +17,7 @@ def p_visits_per_pub(pub_count): #will take pub_counts()
     plt.tight_layout()
     return fig
 
-def p_visits_over_time(visited_pub_times): #will take visited_pub_times()
+def p_visits_over_time(visited_pub_times): #will take visited_pub_times() from beer_app.stats
     """Plot the visits of a pub over time"""
     #Update df to group by ID, name, and month
     df = visited_pub_times.copy()
@@ -67,19 +66,18 @@ def p_visits_over_time(visited_pub_times): #will take visited_pub_times()
     ax.set_title("Pub'lishes per Month")
     ax.grid(True, alpha=0.3)
     fig.autofmt_xdate()
-    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1)) #adds year to the month labels; change interval to change month frequency
+    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=1)) #add yr to mo; change interval to change month frequency
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y")) #adds year to the month labels
     ax.yaxis.set_major_locator(MaxNLocator(integer=True)) #Ensures only whole numbers are displayed for visits
     ax.set_ylim(bottom=0) #No negative pub visits
     #Add a legend to display pub names
-    ax.legend(title="Pub", bbox_to_anchor=(1.05, 1), loc="center")
-    fig.tight_layout
+    ax.legend(title="Pub", loc="best")
     return fig
 
 #Calculate pub visits per visited pub just for expirment
 #p_visits_per_pub(pub_counts())
 #print(pub_counts())
 #print(visited_pub_times())
+#from beer_app.stats import visited_pub_times
 #p_visits_over_time(visited_pub_times())
-#plt.show()
-#exit
+#rufffplt.show()

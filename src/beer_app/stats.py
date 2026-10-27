@@ -16,13 +16,12 @@ def visited_pub_path():
 
 def visited_pub_count(visited_pubs_path):
     """Count visited trips to each pub as a panda df"""
-    
     #Load in visit data
     df = pd.read_csv(visited_pubs_path)
-    
+
     #Load in pub data
     pubs = load_pubs()
-    
+
     #Convert list of Pub objects into a DataFrame
     pubs_df = pd.DataFrame([pub.as_dict() for pub in pubs])
 
@@ -55,10 +54,10 @@ def visited_pub_times():
     """Returns list of pubs with names and dates"""
     #Load in visit data
     df = pd.read_csv(visited_pub_path())
-    
+
     #Load in pub data
     pubs = load_pubs()
-    
+
     #Convert list of Pub objects into a DataFrame
     pubs_df = pd.DataFrame([pub.as_dict() for pub in pubs])
 
