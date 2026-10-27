@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from beer_app.stats import visited_pub_count, visited_pub_path, pub_counts
 
 
-def p_visits_per_pub(pub_count) -> Figure:
+def p_visits_per_pub(pub_count):
     """Plot the number of Pub'lishes per pub."""
     fig = plt.figure(figsize=(10,6))
     plt.bar(pub_count["name"], pub_count["Count"])
@@ -16,5 +16,5 @@ def p_visits_per_pub(pub_count) -> Figure:
     return fig
 
 #Calculate pub visits per visited pub just for expirment
-#p_visits_per_pub(pub_counts())
-#plt.show()
+p_visits_per_pub(pub_counts())
+plt.show()
