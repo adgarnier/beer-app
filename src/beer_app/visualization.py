@@ -18,7 +18,7 @@ def p_visits_per_pub(pub_count): #will take pub_counts() from beer_app.stats
     return fig
 
 def p_visits_over_time(visited_pub_times): #will take visited_pub_times() from beer_app.stats
-    """Plot the visits of a pub over time"""
+    """Plot the visits of a pub over time."""
     #Update df to group by ID, name, and month
     df = visited_pub_times.copy()
     df["VisitDate"] = pd.to_datetime(df["VisitDate"])

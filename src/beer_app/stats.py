@@ -5,7 +5,7 @@ from importlib.resources import files
 from beer_app.pub_data import load_pubs
 
 def pub_counts():
-    """Returns a panda dataframe including Pub ID, Name, and number of total visits"""
+    """Returns a panda dataframe including Pub ID, Name, and number of total visits."""
     pub_count = visited_pub_count(visited_pub_path())
     return pub_count
 
@@ -15,7 +15,7 @@ def visited_pub_path():
     return visited_pub_path
 
 def visited_pub_count(visited_pubs_path):
-    """Count visited trips to each pub as a panda df"""
+    """Count visited trips to each pub as a panda df."""
     #Load in visit data
     df = pd.read_csv(visited_pubs_path)
 
@@ -51,7 +51,7 @@ def visited_pub_count(visited_pubs_path):
     return pub_counts
 
 def visited_pub_times():
-    """Returns list of pubs with names and dates"""
+    """Returns list of pubs with names and dates."""
     #Load in visit data
     df = pd.read_csv(visited_pub_path())
 
