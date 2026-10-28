@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from beer_app.oxford_map import BackgroundMapServer, start_map_server
+from beer_app.pub_crawl import crawl_file_path
 from beer_app.pub_data import Pub, load_pubs
 from beer_app.visited_pubs import load_visit_history
 
 
-LOAD_OPTIONS = ("all", "visited", "unvisited")
+LOAD_OPTIONS = ("all", "visited", "unvisited", "crawl")
 
 LOAD_HELP = """Load help
 
@@ -15,11 +16,13 @@ Choose which pubs to display on the Oxford map:
   all        load every pub
   visited    load pubs marked as visited
   unvisited  load pubs not yet marked as visited
+  crawl      load the most recently generated pub crawl
 
 Commands:
   load all
   load visited
   load unvisited
+  load crawl
   load --help
 
 You must launch the map before loading pubs.
@@ -44,8 +47,15 @@ def load_pubs_onto_map(map_server: BackgroundMapServer, selection: str = "all") 
         options = ", ".join(LOAD_OPTIONS)
         raise ValueError(f"Unknown load option {selection!r}. Choose from: {options}.")
 
-    pubs = load_pubs()
-    if selection != "all":
+    if selection == "crawl":
+        crawl_path = crawl_file_path()
+        if not crawl_path.exists():
+            raise ValueError("No saved pub crawl was found. Create one with 'crawl' first.")
+        pubs = load_pubs(crawl_path)
+    else:
+        pubs = load_pubs()
+
+    if selection in {"visited", "unvisited"}:
         statuses, _ = load_visit_history()
         if selection == "visited":
             pubs = [pub for pub in pubs if statuses.get(pub.id, False)]
@@ -78,7 +88,7 @@ def main(
 
     if selection is None:
         try:
-            selection = input("Load all, visited, or unvisited pubs: ").strip().lower()
+            selection = input("Load all, visited, unvisited, or crawl pubs: ").strip().lower()
         except (EOFError, KeyboardInterrupt):
             print("\nLoad cancelled.")
             if owns_map_server:

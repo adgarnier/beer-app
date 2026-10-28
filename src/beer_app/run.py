@@ -161,8 +161,11 @@ def main() -> int:
                 run_visualization()
                 continue
 
-            if choice in {7, "crawl"}:
-                run_pub_crawl()
+            if choice in {"7", "crawl"}:
+                if not loaded_pubs:
+                    print("Load some pubs before creating a pub crawl.")
+                else:
+                    run_pub_crawl(loaded_pubs)
                 continue
 
             if choice == "q" or choice == "quit":
