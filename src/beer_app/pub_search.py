@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import argparse
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 
-from .pub_data import Pub, load_pubs
+from beer_app.pub_data import Pub, load_pubs
 
 
 SEARCH_HELP = """Search help
@@ -89,6 +89,46 @@ def search_pubs(pubs: Iterable[Pub], query: str) -> list[Pub]:
         if all(term in searchable_text for term in terms):
             matches.append(pub)
     return matches
+
+
+def search_loaded_pubs(
+    pubs: Iterable[Pub],
+    on_results: Callable[[list[Pub]], None],
+) -> int:
+    """Prompt for searches, show list/help commands, and send matches to the caller."""
+    loaded_pubs = list(pubs)
+
+    while True:
+        try:
+            query = input(
+                "Search by name, road, location, sponsor, or notes. Type '--help' for more info: "
+            ).strip()
+        except (EOFError, KeyboardInterrupt):
+            print("\nLeaving search.")
+            return 0
+
+        if is_help_query(query):
+            print(SEARCH_HELP)
+            continue
+
+        try:
+            list_field = list_query_field(query)
+        except ValueError as error:
+            print(error)
+            continue
+
+        if list_field is not None:
+            values = list_pub_values(loaded_pubs, list_field)
+            print(format_pub_values(list_field, values))
+            continue
+
+        matches = search_pubs(loaded_pubs, query)
+        on_results(matches)
+        if query:
+            print(f"Found {len(matches)} pubs matching {query!r}.")
+        else:
+            print(f"Showing all {len(matches)} pubs.")
+        return 0
 
 
 def main(argv: list[str] | None = None) -> int:

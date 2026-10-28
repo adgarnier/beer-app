@@ -4,18 +4,11 @@ from __future__ import annotations
 
 from beer_app import oxford_map
 from beer_app.pub_data import LAUNCH_HELP, load_pubs
-from beer_app.pub_loader import LOAD_HELP, UNLOAD_HELP, load_pubs_onto_map, unload_pubs_from_map
-from beer_app.pub_search import (
-    SEARCH_HELP,
-    format_pub_values,
-    is_help_query,
-    list_pub_values,
-    list_query_field,
-    search_pubs,
-)
-from beer_app.visited_pubs import VISIT_HELP, manage_visited
-from beer_app.stats import pub_counts, visited_pub_times
-from beer_app.visualization import STATS_HELP, launch_stats_graph, show_visits_over_time, show_visits_per_pub
+from beer_app.pub_loader import LOAD_HELP, UNLOAD_HELP, main as run_load, unload_pubs_from_map
+from beer_app.pub_search import (SEARCH_HELP, search_loaded_pubs)
+from beer_app.visited_pubs import VISIT_HELP, main as run_visited
+from beer_app.visualization import STATS_HELP, main as run_visualization
+from beer_app.pub_crawl import CRAWL_HELP, main as run_pub_crawl
 import matplotlib.pyplot as plt
 
 
@@ -24,10 +17,10 @@ WELCOME_MESSAGE = r"""
  _____                                                       _____
 ( ___ )                                                     ( ___ )
  |   |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|   |
- |   |   .-,--. ,-.  .   ,-,---.  , .    _,_  .---. ,-_/,.   |   |
+ |   |   .-,--. ,-.  _   ,-,---.  , .    _,_  .---. ,-_ __,  |   |
  |   |    '|__/   |  |    '|___/ ,' |     |   \___  ' |_|/   |   |
  |   |    .|      |  | .  ,|   \    |     |       \  /| |    |   |
- |   |    `'      `--^-' `-^---'    `--' -'-  `---'  `' `'   |   |
+ |   |    `'      `--^-' `-^---'    `--' -'-  `---'  -- --   |   |
  |___|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|___|
 (_____)                                                     (_____)
                   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -59,31 +52,46 @@ HELP_MESSAGE = """PUB'LISH --help
 
 Launch
   Open the interactive Oxford pub map in your browser.
-  Use "launch --help" for more information.
+  Use 'launch --help' for more information.
 
 Load
   Add pubs to the map. Choose from all, visited, or unvisited pubs.
-  You can also enter "load all", "load visited", or "load unvisited".
-  Use "load --help" for more information.
+  You can also enter 'load all', 'load visited', or 'load unvisited'.
+  Use 'load --help' for more information.
 
 Unload
   Remove the currently loaded pubs from the map.
-  Use "unload --help" for more information.
+  Use 'unload --help' for more information.
 
 Search
   Search the loaded pubs using names, roads, locations, sponsors, or other keywords.
-  Use "search --help" for more information.
+  Use 'search --help' for more information.
 
 Visit
   Mark pubs as visited and see the pubs you have already visited.
-  Use "visit --help" for more information.
+  Use 'visit --help' for more information.
 
 Stats
   Create a graph showing how many times you have visited each pub.
+  Use 'stats --help' for more information.
+
+Crawl
+  Create your own pub crawl.
+  Use 'crawl --help' for more information.
 
 Quit
   Stop the map server and close PUB'LISH.
 """
+
+COMMAND_HELP = {
+    "launch": LAUNCH_HELP,
+    "load": LOAD_HELP,
+    "unload": UNLOAD_HELP,
+    "search": SEARCH_HELP,
+    "visit": VISIT_HELP,
+    "stats": STATS_HELP,
+    "crawl": CRAWL_HELP,
+}
 
 
 def main() -> int:
@@ -104,28 +112,9 @@ def main() -> int:
                 print(HELP_MESSAGE)
                 continue
 
-            if choice == "launch --help":
-                print(LAUNCH_HELP)
-                continue
-
-            if choice == "load --help":
-                print(LOAD_HELP)
-                continue
-
-            if choice == "unload --help":
-                print(UNLOAD_HELP)
-                continue
-
-            if choice == "search --help":
-                print(SEARCH_HELP)
-                continue
-
-            if choice == "visit --help":
-                print(VISIT_HELP)
-                continue
-
-            if choice == "stats --help":
-                print(STATS_HELP)
+            help_command = choice.removesuffix(" --help") if choice.endswith(" --help") else None
+            if help_command in COMMAND_HELP:
+                print(COMMAND_HELP[help_command])
                 continue
 
             if choice == "1" or choice == "launch":
@@ -142,18 +131,9 @@ def main() -> int:
                     print("Launch the Oxford map before loading the pub list.")
                 else:
                     load_parts = choice.split(maxsplit=1)
-                    if len(load_parts) == 2:
-                        load_selection = load_parts[1]
-                    else:
-                        try:
-                            load_selection = input("Load all, visited, or unvisited pubs: ").strip().lower()
-                        except (EOFError, KeyboardInterrupt):
-                            print("\nGoodbye!")
-                            return 0
-                    try:
-                        loaded_pubs = load_pubs_onto_map(map_server, load_selection)
-                    except ValueError as error:
-                        print(error)
+                    loaded_selection = run_load(map_server, load_parts[1] if len(load_parts) == 2 else None)
+                    if loaded_selection is not None:
+                        loaded_pubs = loaded_selection
                 continue
 
             if choice == "3" or choice == "unload":
@@ -170,65 +150,22 @@ def main() -> int:
                 elif not loaded_pubs:
                     print("Load the pub list before searching it.")
                 else:
-                    while True:
-                        try:
-                            prompt = "Search by name, road, location, sponsor, or notes. Type '--help' for more info: "
-                            query = input(prompt).strip()
-                        except (EOFError, KeyboardInterrupt):
-                            print("\nGoodbye!")
-                            return 0
-                        if is_help_query(query):
-                            print(SEARCH_HELP)
-                            continue
-                        try:
-                            list_field = list_query_field(query)
-                        except ValueError as error:
-                            print(error)
-                            continue
-                        if list_field is not None:
-                            values = list_pub_values(loaded_pubs, list_field)
-                            print(format_pub_values(list_field, values))
-                            continue
-                        break
-                    matches = search_pubs(loaded_pubs, query)
-                    map_server.set_pubs(matches)
-                    if query:
-                        print(f"Found {len(matches)} pubs matching {query!r}.")
-                    else:
-                        print(f"Showing all {len(matches)} pubs.")
+                    search_loaded_pubs(loaded_pubs, map_server.set_pubs)
                 continue
 
             if choice == "5" or choice == "visit":
-                manage_visited(loaded_pubs or load_pubs())
+                run_visited(loaded_pubs or load_pubs())
                 continue
 
             if choice in {"6", "stats"}:
-                while True:
-                    try:
-                        stats_choice = input(
-                            "Choose 'visits per pub (pub)' or 'visits over time (time)'. "
-                            "Type '--help' for more info: "
-                        ).strip().lower()
-                    except (EOFError, KeyboardInterrupt):
-                        print("\nGoodbye!")
-                        return 0
+                run_visualization()
+                continue
 
-                    if stats_choice in {"h", "help", "--help"}:
-                        print(STATS_HELP)
-                        continue
-                    elif stats_choice in {"visit per pub", "visits per pub", "pub"}:
-                        launch_stats_graph(show_visits_per_pub)
-                        plt.show()
-                        break
-                    elif stats_choice in {"visit over time", "visits over time", "time"}:
-                        launch_stats_graph(show_visits_over_time)
-                        plt.show()
-                        break
-                    elif stats_choice in {"q", "quit", "exit", "bye", "cya"}:
-                        print("Leaving stats!")
-                        break
-                    else:
-                        print("Unknown stats option. Choose 'visits per pub' or 'visits over time'. Exit with 'quit'.")
+            if choice in {"7", "crawl"}:
+                if not loaded_pubs:
+                    print("Load some pubs before creating a pub crawl.")
+                else:
+                    run_pub_crawl(loaded_pubs)
                 continue
 
             if choice == "q" or choice == "quit":
