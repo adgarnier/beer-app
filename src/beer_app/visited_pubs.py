@@ -7,8 +7,7 @@ import threading
 from datetime import date
 from importlib.resources import files
 from pathlib import Path
-
-from .pub_data import Pub
+from beer_app.pub_data import Pub, load_pubs
 
 VISIT_HELP = """VISIT help
 
@@ -122,3 +121,11 @@ def manage_visited(pubs: list[Pub]) -> None:
             dates.setdefault(pub_id, []).append(visit_date)
             save_visit_history(statuses, dates)
             print(f"Recorded a visit to pub {pub_id} on {visit_date}.")
+
+def main(pubs: list[Pub] | None = None) -> int:
+    """Run the interactive visit manager for the supplied or packaged pub list."""
+    manage_visited(pubs if pubs is not None else load_pubs())
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())

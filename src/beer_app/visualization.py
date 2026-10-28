@@ -101,3 +101,36 @@ def launch_stats_graph(target):
     process = Process(target=target, daemon=True)
     process.start()
     return process
+
+def main() -> int:
+    """Prompt for and display one of the stats graphs."""
+    graph_processes = []
+
+    while True:
+        # Reap completed graph processes without waiting for open windows.
+        graph_processes = [process for process in graph_processes if process.is_alive()]
+        try:
+            stats_choice = input(
+                "Choose 'pub' or 'time'. Type '--help' for more info: "
+            ).strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print("\nLeaving stats!")
+            return 0
+
+        if stats_choice in {"h", "help", "--help"}:
+            print(STATS_HELP)
+            continue
+        if stats_choice in {"visit per pub", "visits per pub", "pub"}:
+            graph_processes.append(launch_stats_graph(show_visits_per_pub))
+            continue
+        if stats_choice in {"visit over time", "visits over time", "time"}:
+            graph_processes.append(launch_stats_graph(show_visits_over_time))
+            continue
+        if stats_choice in {"q", "quit", "exit", "bye", "cya"}:
+            print("Leaving stats!")
+            return 0
+
+        print("Unknown stats option. Choose 'visits per pub' or 'visits over time'. Exit with 'quit'.")
+
+if __name__ == "__main__":
+    raise SystemExit(main())

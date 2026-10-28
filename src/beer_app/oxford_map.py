@@ -16,8 +16,8 @@ from importlib.resources import files
 from pathlib import Path
 
 if __package__:
-    from .pub_data import Pub
-    from .visited_pubs import load_visit_history, record_visit_today
+    from beer_app.pub_data import Pub
+    from beer_app.visited_pubs import load_visit_history, record_visit_today
 
 
 def build_map_page() -> str:
