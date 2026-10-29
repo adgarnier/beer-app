@@ -15,6 +15,8 @@
   --pub-teal: #477c78;
   --pub-border: #c4b39f;
   --pub-grid: #806c59;
+  --pub-display-font: "Uncial Antiqua", "IM FELL English", "Old English Text MT", "Palatino Linotype", Georgia, serif;
+  --pub-body-font: "IM FELL English", "Palatino Linotype", "Book Antiqua", Georgia, serif;
 }
 
 html {
@@ -24,7 +26,7 @@ html {
 body {
   color: var(--pub-ink);
   background: var(--pub-paper);
-  font-family: Georgia, "Palatino Linotype", "Book Antiqua", serif;
+  font-family: var(--pub-body-font);
   line-height: 1.7;
 }
 
@@ -97,13 +99,14 @@ div.body h4,
 div.body h5,
 div.body h6 {
   color: var(--pub-wood);
-  font-family: Georgia, "Palatino Linotype", "Book Antiqua", serif;
+  font-family: var(--pub-display-font);
   font-weight: 700;
 }
 
 div.body h1 {
   border-bottom: 3px solid var(--pub-amber);
   padding-bottom: 0.35em;
+  letter-spacing: 0.025em;
 }
 
 div.body h2 {
@@ -167,7 +170,13 @@ hr {
 div.sphinxsidebar h3,
 div.sphinxsidebar h4 {
   color: var(--pub-amber);
-  font-family: Georgia, "Palatino Linotype", "Book Antiqua", serif;
+  font-family: var(--pub-display-font);
+}
+
+div.sphinxsidebar h1.logo {
+  font-family: var(--pub-display-font);
+  font-size: 1.65em;
+  letter-spacing: 0.035em;
 }
 
 /* Callouts echo the chart palette while keeping the page easy to read. */
