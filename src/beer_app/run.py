@@ -112,7 +112,7 @@ def main() -> int:
                 print(COMMAND_HELP[help_command])
                 continue
 
-            if choice == "1" or choice == "launch":
+            if choice in {"1", "launch"}:
                 if map_server is None:
                     print("Launching the Oxford map...")
                     map_server = oxford_map.start_map_server(port=0)
@@ -126,12 +126,13 @@ def main() -> int:
                     print("Launch the Oxford map before loading the pub list.")
                 else:
                     load_parts = choice.split(maxsplit=1)
-                    loaded_selection = run_load(map_server, load_parts[1] if len(load_parts) == 2 else None)
+                    loaded_selection = run_load(map_server,
+                                                load_parts[1] if len(load_parts) == 2 else None)
                     if loaded_selection is not None:
                         loaded_pubs = loaded_selection
                 continue
 
-            if choice == "3" or choice == "unload":
+            if choice in {"3", "unload"}:
                 if map_server is None:
                     print("Launch the Oxford map before unloading the pub list.")
                 else:
@@ -139,7 +140,7 @@ def main() -> int:
                     loaded_pubs = []
                 continue
 
-            if choice == "4" or choice == "search":
+            if choice in {"4", "search"}:
                 if map_server is None:
                     print("Launch the Oxford map before searching the pub list.")
                 elif not loaded_pubs:
@@ -148,7 +149,7 @@ def main() -> int:
                     search_loaded_pubs(loaded_pubs, map_server.set_pubs)
                 continue
 
-            if choice == "5" or choice == "visit":
+            if choice in {"5", "visit"}:
                 run_visited(loaded_pubs or load_pubs())
                 continue
 
@@ -163,12 +164,13 @@ def main() -> int:
                     run_pub_crawl(loaded_pubs)
                 continue
 
-            if choice == "q" or choice == "quit":
+            if choice in {"q", "quit", "bye", "exit", "leave"}:
                 print("Goodbye!")
                 return 0
 
             print(
-                "Unknown option. Type 'help' to see all available options or 'quit' to leave the app."
+                "Unknown option. Type 'help' to see all \
+                available options or 'quit' to leave the app."
             )
     finally:
         if map_server is not None:

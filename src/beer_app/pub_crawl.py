@@ -1,4 +1,5 @@
-"""Generates a pub crawl feature, where the user specifies a start and end pub, and the number of pubs they wish to visit""" 
+"""Generate a pub crawl feature, where the user specifies 
+starting pud, ending pub, and the number of pubs they wish to visit."""
 
 import csv
 import random
@@ -18,8 +19,6 @@ When prompted, enter:
   ending pub         a different pub name, or a unique part of the name
   total pubs         the total number of pubs in the crawl, including both endpoints
 
-The crawl first looks for intermediate pubs within 100 metres either side of the route. If
-there are not enough, it widens the search to 200, 300, 400, and so on until 1000 metres.
 It randomly selects the intermediate pubs and orders them from the starting pub
 towards the ending pub. If a name matches more than one pub, enter a more
 specific name.
@@ -34,20 +33,20 @@ The latest crawl is saved and can be displayed on the map with 'load crawl'.
 # Default variables used for the following functions
 EARTH_RADIUS_M = 6_371_000      # Approximate radius of the earth in metres
 BUFFER_METRES = 100     # Sets the initial corridor width either side of the line
-BUFFER_STEP_METRES = 100   
+BUFFER_STEP_METRES = 100
 MAX_BUFFER_METRES = 1000    # The maximum buffer width either side of the line
 CRAWL_FILE_NAME = "pub_crawl.csv"   # Stores the filename for the most recently generated pub crawl
 CRAWL_COLUMNS = ("Pub", "Road", "Location", "Sponsor", "Notes", "Latitude", "Longitude", "ID")
 
 # Function to convert a pub's coordinates into an approximate local coordinate system
 def relative_xy(pub: Pub, start: Pub) -> tuple[float, float]:
-    # Setting E-W and N-S displacement in metres. Starting pub will have coordinates (0, 0)
+    """Set East-West and North-south displacement in metres."""
     x = EARTH_RADIUS_M * radians(pub.longitude - start.longitude) * cos(radians(start.latitude))
     y = EARTH_RADIUS_M * radians(pub.latitude - start.latitude)
     return x, y
 
 def distance_to_line(pub: Pub, start: Pub, end: Pub) -> float:
-    """Calculates the distance between a pub and the line between start and end pub"""
+    """Calculate the distance between a pub and the line between start and end pub."""
     px, py = relative_xy(pub, start)        # Candidate pub
     ex, ey = relative_xy(end, start)        # End pub
 
@@ -57,7 +56,7 @@ def distance_to_line(pub: Pub, start: Pub, end: Pub) -> float:
     # Handles if two points have exactly the same coordinates
     if length_squared == 0:
         return hypot(px, py)
-    # Calculates point along line (between start and end) that is nearest to candidate pub 
+    # Calculates point along line (between start and end) that is nearest to candidate pub
     t = (px * ex + py * ey) / length_squared
     t = max(0, min(1, t))
     closest_x = t * ex
@@ -66,9 +65,15 @@ def distance_to_line(pub: Pub, start: Pub, end: Pub) -> float:
     # Calculates the distance from the candidate pub to that nearest point on the line, in metres
     return hypot(px - closest_x, py - closest_y)
 
-def pubs_in_buffer(pubs: list[Pub],start: Pub, end: Pub, buffer_metres: float = BUFFER_METRES) -> list[Pub]:
+def pubs_in_buffer(
+    pubs: list[Pub],
+    start: Pub,
+    end: Pub,
+    buffer_metres:
+    float = BUFFER_METRES
+) -> list[Pub]:
     """
-    A function to create a list of pubs that fall within the corridor created above.
+    Create a list of pubs that fall within the corridor created above.
 
     Parameters
     ----------
@@ -88,29 +93,34 @@ def pubs_in_buffer(pubs: list[Pub],start: Pub, end: Pub, buffer_metres: float = 
     # Returns a list containing only pubs inside the corridor
     return [
         pub for pub in pubs
-        if pub.id not in (start.id, end.id)     # Excludes the two endpoints from intermediate candidates.
+        if pub.id not in (start.id, end.id)
         and distance_to_line(pub, start, end) <= buffer_metres
     ]
 
-def create_pub_crawl(pubs: list[Pub], start: Pub, end: Pub, total_pubs: int, buffer_metres: float = BUFFER_METRES) -> list[Pub]:
+def create_pub_crawl(
+    pubs: list[Pub],
+    start: Pub,
+    end: Pub,
+    total_pubs: int,
+    buffer_metres: float = BUFFER_METRES
+) -> list[Pub]:
     """
-    Pub crawl function that randomly selects a set number of pubs (set by the user) that 
-    fall in the corridor between the start and end pub
+    Randomly selects a set number of pubs (set by the user) that 
+    fall in the corridor between the start and end pub.
     
     Parameters
     ----------
     pubs : list
         A list of pubs that sit in the corridor, created by pubs_in_buffer() above
-    start : `Pub` object
+    start : 'Pub' object
         The starting pub, specified by the user
-    end : `Pub` object
+    end : 'Pub' object
         The ending pub, specified by the user
     total_pubs : integer
         The total number of pubs on the pub crawl, specified by the user
     buffer_metres : float
         The buffer distance to create the corridor between start and end
     """
-
     if total_pubs < 2:
         raise ValueError("A crawl must include at least two pubs.")
 
@@ -142,7 +152,7 @@ def create_pub_crawl(pubs: list[Pub], start: Pub, end: Pub, total_pubs: int, buf
     ex, ey = relative_xy(end, start)    # Provides the direction from start to end
 
     def progress(pub: Pub) -> float:
-        """Uses a dot product to measure how far along that direction each pub sits"""
+        """Use a dot product to measure how far along that direction each pub sits."""
         x, y = relative_xy(pub, start)
         return x * ex + y * ey
 
@@ -163,7 +173,8 @@ def find_pub(pubs: list[Pub], query: str) -> Pub:
         raise ValueError(f"No pub found matching {query!r}.")
     if len(matches) > 1:
         names = ", ".join(pub.name for pub in matches)
-        raise ValueError(f"More than one pub matches {query!r}: {names}. Please use a more specific name.")
+        raise ValueError(f"More than one pub matches {query!r}: {names}. \
+                         Please use a more specific name.")
 
     # Reaches this line if the function has found exactly one match
     return matches[0]
@@ -230,12 +241,11 @@ def main(pubs: list[Pub] | None = None) -> int:
         print(f"Could not create pub crawl: {error}")
         return 1
     # Runs if `try` block runs without exception, printing pub crawl in order
-    else:
-        print("Your pub crawl:")
-        for number, pub in enumerate(crawl, start=1):
-            print(f"{number}. {pub.name} ({pub.location})")
-        print(f"Saved crawl to {saved_path.name}. Use 'load crawl' to show it on the map.")
-        return 0
+    print("Your pub crawl:")
+    for number, pub in enumerate(crawl, start=1):
+        print(f"{number}. {pub.name} ({pub.location})")
+    print(f"Saved crawl to {saved_path.name}. Use 'load crawl' to show it on the map.")
+    return 0
 
 if __name__ == "__main__":
     raise SystemExit(main())

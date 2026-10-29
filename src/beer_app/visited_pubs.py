@@ -23,7 +23,8 @@ def _default_visited_path() -> Path:
     return Path(files("beer_app").joinpath("data", "visited_pubs.csv"))
 
 
-def load_visit_history(path: str | Path | None = None) -> tuple[dict[int, bool], dict[int, list[str]]]:
+def load_visit_history(path: str | Path | None = None
+                       ) -> tuple[dict[int, bool], dict[int, list[str]]]:
     """Return current visited statuses and visit dates from the CSV."""
     source = Path(path) if path is not None else _default_visited_path()
     if not source.exists():
@@ -49,7 +50,11 @@ def load_visit_history(path: str | Path | None = None) -> tuple[dict[int, bool],
     return statuses, dates
 
 
-def save_visit_history(statuses: dict[int, bool], dates: dict[int, list[str]], path: str | Path | None = None) -> None:
+def save_visit_history(
+        statuses: dict[int, bool],
+        dates: dict[int, list[str]],
+        path: str | Path | None = None
+        ) -> None:
     """Write current status and visit dates for each pub to CSV."""
     destination = Path(path) if path is not None else _default_visited_path()
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -79,7 +84,8 @@ def record_visit_today(pub_id: int, path: str | Path | None = None) -> bool:
 def manage_visited(pubs: list[Pub]) -> None:
     """Show pub visit status and record each visit entered by the user."""
     statuses, dates = load_visit_history()
-    print("\nEnter a pub ID to record a visit, 'unvisit ID' to clear its status, or Enter to return:")
+    print("\nEnter a pub ID to record a visit, \
+        'unvisit ID' to clear its status, or Enter to return:")
     for pub in pubs:
         marker = "[x]" if statuses.get(pub.id, False) else "[ ]"
         visit_dates = ", ".join(dates.get(pub.id, []))

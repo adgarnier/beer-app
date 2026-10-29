@@ -74,7 +74,8 @@ def main(
     """Load pubs onto the supplied map, or launch a map when run as a script."""
     owns_map_server = map_server is None
     if map_server is None:
-        choice = input("Need to start server to load pubs, would you like to continue? [y/n] ").strip().lower()
+        choice = input("Need to start server to load pubs, " \
+            "would you like to continue? [y/n] ").strip().lower()
         if choice in {"y", "yes"}:
             map_server = start_map_server()
         else:
