@@ -35,6 +35,10 @@ Pub'lish documentation
 
    Welcome to PUB`LISH, your Oxford pub companion.
 
+   See the README file `here`_
+
+.. _here: https://adgarnier.github.io/beer-app/readme.html
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -42,4 +46,3 @@ Pub'lish documentation
    Your Guide to Pub'lishing <guide>
    Quick Start <quickstart>
    Reference <reference>
-   Project README <readme.html>
