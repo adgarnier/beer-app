@@ -42,4 +42,4 @@ Pub'lish documentation
    Your Guide to Pub'lishing <guide>
    Quick Start <quickstart>
    Reference <reference>
-   `Project README <readme.html>`_
+   Project README <readme.html>
