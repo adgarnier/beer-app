@@ -3,6 +3,7 @@ Generate a pub crawl feature, where the user specifies
 starting pud, ending pub, and the number of pubs they wish to visit.
 """
 
+
 import csv
 import random
 from importlib.resources import files
@@ -87,8 +88,9 @@ def pubs_in_buffer(
         The ending pub, specified by the user
     buffer_metres : float
         The buffer distance to create the corridor between start and end
-
     """
+
+
     if buffer_metres < 0:   # Quick check to make sure the buffer width is not negative
         raise ValueError("Buffer width cannot be negative.")
 
@@ -123,7 +125,8 @@ def create_pub_crawl(
     buffer_metres : float
         The buffer distance to create the corridor between start and end
     """
-    
+
+
     if total_pubs < 2:
         raise ValueError("A crawl must include at least two pubs.")
 
