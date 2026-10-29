@@ -170,8 +170,8 @@ def main() -> int:
 
             print(
                 "Unknown option. Type 'help' to see all \
-                available options or 'quit' to leave the app."
-            )
+available options or 'quit' to leave the app."
+)
     finally:
         if map_server is not None:
             print("Stopping the Oxford map...")
