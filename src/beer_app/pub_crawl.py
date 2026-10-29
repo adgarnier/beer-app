@@ -1,8 +1,7 @@
-"""
-Generate a pub crawl feature, where the user specifies
-starting pud, ending pub, and the number of pubs they wish to visit.
-"""
+"""Generate pub crawl routes.
 
+Users specify a starting pub, an ending pub, and the number of pubs to visit.
+"""
 
 import csv
 import random
@@ -72,8 +71,7 @@ def pubs_in_buffer(
     pubs: list[Pub],
     start: Pub,
     end: Pub,
-    buffer_metres:
-    float = BUFFER_METRES
+    buffer_metres: float = BUFFER_METRES,
 ) -> list[Pub]:
     """
     Create a list of pubs that fall within the corridor created above.
@@ -89,8 +87,6 @@ def pubs_in_buffer(
     buffer_metres : float
         The buffer distance to create the corridor between start and end
     """
-
-
     if buffer_metres < 0:   # Quick check to make sure the buffer width is not negative
         raise ValueError("Buffer width cannot be negative.")
 
@@ -106,11 +102,12 @@ def create_pub_crawl(
     start: Pub,
     end: Pub,
     total_pubs: int,
-    buffer_metres: float = BUFFER_METRES
+    buffer_metres: float = BUFFER_METRES,
 ) -> list[Pub]:
-    """
-    Randomly selects a set number of pubs (set by the user) that 
-    fall in the corridor between the start and end pub.
+    """Select intermediate pubs for a crawl.
+
+    Randomly choose the requested number of pubs within the corridor between
+    the starting and ending pubs.
 
     Parameters
     ----------
@@ -125,8 +122,6 @@ def create_pub_crawl(
     buffer_metres : float
         The buffer distance to create the corridor between start and end
     """
-
-
     if total_pubs < 2:
         raise ValueError("A crawl must include at least two pubs.")
 
