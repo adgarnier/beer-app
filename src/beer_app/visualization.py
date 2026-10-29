@@ -142,7 +142,7 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
     return fig
 
 def show_visits_per_pub():
-    """ visits per pub."""
+    """Visit per pub."""
     p_visits_per_pub(pub_counts())
     plt.show()
 

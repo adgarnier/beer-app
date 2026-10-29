@@ -1,5 +1,7 @@
-"""Generate a pub crawl feature, where the user specifies 
-starting pud, ending pub, and the number of pubs they wish to visit."""
+"""
+Generate a pub crawl feature, where the user specifies
+starting pud, ending pub, and the number of pubs they wish to visit.
+"""
 
 import csv
 import random
@@ -121,6 +123,7 @@ def create_pub_crawl(
     buffer_metres : float
         The buffer distance to create the corridor between start and end
     """
+    
     if total_pubs < 2:
         raise ValueError("A crawl must include at least two pubs.")
 
