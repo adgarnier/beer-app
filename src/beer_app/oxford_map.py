@@ -192,7 +192,7 @@ class MapState:
 @dataclass
 class BackgroundMapServer:
     """A running map server and its background thread."""
-    
+
     server: ThreadingHTTPServer
     thread: threading.Thread
     url: str

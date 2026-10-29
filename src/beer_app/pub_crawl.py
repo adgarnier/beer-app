@@ -111,7 +111,7 @@ def create_pub_crawl(
     """
     Randomly selects a set number of pubs (set by the user) that 
     fall in the corridor between the start and end pub.
-    
+
     Parameters
     ----------
     pubs : list

@@ -20,7 +20,7 @@ PUB_LIST = "pub_list_v3.csv"
 @dataclass(frozen=True)
 class Pub:
     """A pub that can be displayed on the Oxford map."""
-    
+
     id: int
     name: str
     road: str
