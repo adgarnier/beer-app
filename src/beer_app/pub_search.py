@@ -1,12 +1,8 @@
 """Search Oxford pubs by their text fields."""
 
-from __future__ import annotations
-
 import argparse
 from collections.abc import Callable, Iterable
-
 from beer_app.pub_data import Pub, load_pubs
-
 
 SEARCH_HELP = """Search help
 
@@ -31,11 +27,9 @@ Search commands:
 
 LISTABLE_FIELDS = ("name", "road", "location", "sponsor")
 
-
 def is_help_query(query: str) -> bool:
     """Return whether a query requests search guidance."""
     return query.strip().casefold() == "--help"
-
 
 def list_query_field(query: str) -> str | None:
     """Return the requested field for a ``--list`` command, if present."""
@@ -51,7 +45,6 @@ def list_query_field(query: str) -> str | None:
         raise ValueError(f"Unknown list field {parts[1]!r}. Choose from: {fields}.")
     return parts[1]
 
-
 def list_pub_values(pubs: Iterable[Pub], field: str) -> list[str]:
     """Return sorted unique values for a listable pub field."""
     if field == "fields":
@@ -66,7 +59,6 @@ def list_pub_values(pubs: Iterable[Pub], field: str) -> list[str]:
         values.update(part.strip() for part in parts if part.strip())
     return sorted(values, key=str.casefold)
 
-
 def format_pub_values(field: str, values: Iterable[str]) -> str:
     """Format list-command results for terminal display."""
     value_list = list(values)
@@ -74,7 +66,6 @@ def format_pub_values(field: str, values: Iterable[str]) -> str:
     if not value_list:
         return f"{heading}:\n  none"
     return f"{heading}:\n" + "\n".join(f" {value}" for value in value_list)
-
 
 def search_pubs(pubs: Iterable[Pub], query: str) -> list[Pub]:
     """Return pubs matching every word in a case-insensitive query."""
@@ -89,7 +80,6 @@ def search_pubs(pubs: Iterable[Pub], query: str) -> list[Pub]:
         if all(term in searchable_text for term in terms):
             matches.append(pub)
     return matches
-
 
 def search_loaded_pubs(
     pubs: Iterable[Pub],
@@ -130,7 +120,6 @@ def search_loaded_pubs(
             print(f"Showing all {len(matches)} pubs.")
         return 0
 
-
 def main(argv: list[str] | None = None) -> int:
     """Search the packaged pub list from the command line."""
     parser = argparse.ArgumentParser(description="Search the Oxford pub list.", add_help=False)
@@ -154,7 +143,6 @@ def main(argv: list[str] | None = None) -> int:
     for pub in matches:
         print(f"  {pub.name} ({pub.location})")
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

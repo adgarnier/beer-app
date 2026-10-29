@@ -26,9 +26,8 @@ def visited_pub_count(visited_pubs_path):
     pubs_df = pd.DataFrame([pub.as_dict() for pub in pubs])
 
     #Filter for pubs visited are only 'true'
-    filt_df = df[
-        df["Visited"].astype(str).str.lower() == "true"
-    ]
+    filt_df = df[df["Visited"].astype(str).str.lower() == "true"
+                 ]
     #Talley all visits
     pub_counts = (
     filt_df["ID"]
@@ -61,10 +60,8 @@ def visited_pub_times():
     #Convert list of Pub objects into a DataFrame
     pubs_df = pd.DataFrame([pub.as_dict() for pub in pubs])
 
-        #Filter for pubs visited are only 'true'
-    filt_df = df[
-        df["Visited"].astype(str).str.lower() == "true"
-    ]
+    #Filter for pubs visited are only 'true'
+    filt_df = df[df["Visited"].astype(str).str.lower() == "true"]
 
     #Merge visit counts with pub names
     filt_df = pd.merge(

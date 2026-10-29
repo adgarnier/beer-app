@@ -1,12 +1,9 @@
 """Load Oxford pub data onto the interactive map."""
 
-from __future__ import annotations
-
 from beer_app.oxford_map import BackgroundMapServer, start_map_server
 from beer_app.pub_crawl import crawl_file_path
 from beer_app.pub_data import Pub, load_pubs
 from beer_app.visited_pubs import load_visit_history
-
 
 LOAD_OPTIONS = ("all", "visited", "unvisited", "crawl")
 
@@ -39,7 +36,6 @@ Commands:
 You must launch the map before unloading pubs.
 """
 
-
 def load_pubs_onto_map(map_server: BackgroundMapServer, selection: str = "all") -> list[Pub]:
     """Load the selected pubs, display them on the map, and return them."""
     selection = selection.strip().lower()
@@ -66,12 +62,10 @@ def load_pubs_onto_map(map_server: BackgroundMapServer, selection: str = "all") 
     print(f"Added {len(pubs)} {selection} pubs to the Oxford map.")
     return pubs
 
-
 def unload_pubs_from_map(map_server: BackgroundMapServer) -> None:
     """Remove all currently displayed pubs from the map."""
     map_server.clear_pubs()
     print("Removed all pubs from the Oxford map.")
-
 
 def main(
     map_server: BackgroundMapServer | None = None,

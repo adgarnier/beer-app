@@ -1,7 +1,5 @@
 """Load and validate Oxford pub data from CSV files."""
 
-from __future__ import annotations
-
 import csv
 from dataclasses import asdict, dataclass
 from importlib.resources import files
@@ -22,7 +20,6 @@ pub_list = "pub_list_v3.csv"
 @dataclass(frozen=True)
 class Pub:
     """A pub that can be displayed on the Oxford map."""
-
     id: int
     name: str
     road: str
@@ -36,13 +33,11 @@ class Pub:
         """Return a JSON-ready representation of the pub."""
         return asdict(self)
 
-
 def _default_pub_list():
     """Return the packaged pub-list resource."""
     if __package__:
         return files("beer_app").joinpath("data", pub_list)
     return Path(__file__).with_name("data") / pub_list
-
 
 def load_pubs(path: str | Path | None = None) -> list[Pub]:
     """Load pubs from a CSV file, using the packaged list by default."""
@@ -59,7 +54,6 @@ def load_pubs(path: str | Path | None = None) -> list[Pub]:
         pubs = [_pub_from_row(row, row_number) for row_number, row in enumerate(reader, start=2)]
 
     return pubs
-
 
 def _pub_from_row(row: dict[str, str], row_number: int) -> Pub:
     """Validate and convert one CSV row."""
@@ -86,7 +80,6 @@ def _pub_from_row(row: dict[str, str], row_number: int) -> Pub:
         latitude=latitude,
         longitude=longitude,
     )
-
 
 if __name__ == "__main__":
     loaded_pubs = load_pubs()

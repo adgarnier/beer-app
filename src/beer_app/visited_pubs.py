@@ -1,7 +1,5 @@
 """Load and save the list of pubs marked as visited."""
 
-from __future__ import annotations
-
 import csv
 import threading
 from datetime import date
@@ -11,6 +9,7 @@ from beer_app.pub_data import Pub, load_pubs
 
 VISIT_HELP = """VISIT help
 
+View the pubs from the currently loaded list.
 Mark off which pubs you have visited by typing the corresponding ID.
 
 Commands:
@@ -50,9 +49,7 @@ def load_visit_history(path: str | Path | None = None) -> tuple[dict[int, bool],
     return statuses, dates
 
 
-def save_visit_history(
-    statuses: dict[int, bool], dates: dict[int, list[str]], path: str | Path | None = None
-) -> None:
+def save_visit_history(statuses: dict[int, bool], dates: dict[int, list[str]], path: str | Path | None = None) -> None:
     """Write current status and visit dates for each pub to CSV."""
     destination = Path(path) if path is not None else _default_visited_path()
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -88,8 +85,8 @@ def manage_visited(pubs: list[Pub]) -> None:
         visit_dates = ", ".join(dates.get(pub.id, []))
         suffix = f" — visits: {visit_dates}" if visit_dates else ""
         print(f"{marker} {pub.id}: {pub.name}{suffix}")
-
     valid_ids = {pub.id for pub in pubs}
+
     while True:
         try:
             answer = input("Pub ID or command: ").strip()

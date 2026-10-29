@@ -5,9 +5,7 @@ import random       # Allows Python to select pubs randomly
 from importlib.resources import files
 from math import cos, hypot, radians    # `cos` and `radians` help convert geographical coordinates into distances in metres. `hypot` calculates the distance between two points.
 from pathlib import Path
-
 from beer_app.pub_data import Pub, load_pubs       # Imports existing pub data structure and pub data loader.
-
 
 CRAWL_HELP = """Crawl help
 
@@ -40,11 +38,9 @@ MAX_BUFFER_METRES = 1000
 CRAWL_FILE_NAME = "pub_crawl.csv"
 CRAWL_COLUMNS = ("Pub", "Road", "Location", "Sponsor", "Notes", "Latitude", "Longitude", "ID")
 
-
 def crawl_file_path() -> Path:
     """Return the path used to save the latest pub crawl."""
     return Path(files("beer_app").joinpath("data", CRAWL_FILE_NAME))
-
 
 def save_pub_crawl(crawl: list[Pub], path: str | Path | None = None) -> Path:
     """Save a crawl in route order using the standard pub CSV format."""
@@ -70,26 +66,14 @@ def save_pub_crawl(crawl: list[Pub], path: str | Path | None = None) -> Path:
 
     return destination
 
-
 # Function to convert a pub's coordinates into an approximate local coordinate system
 def relative_xy(pub: Pub, start: Pub) -> tuple[float, float]:
-
-    # East-West displacement in metres
-    x = EARTH_RADIUS_M * radians(
-        pub.longitude - start.longitude     # `start` is the reference point. Starting pub will have coordinates (0, 0)
-    ) * cos(radians(start.latitude))
-
-    # North-South displacement in metres
-    y = EARTH_RADIUS_M * radians(
-        pub.latitude - start.latitude       # `start` is the reference point. Starting pub will have coordinates (0, 0)
-    )
-
+    x = EARTH_RADIUS_M * radians(pub.longitude - start.longitude) * cos(radians(start.latitude))     # East-West displacement in metres. `start` is the reference point. Starting pub will have coordinates (0, 0)
+    y = EARTH_RADIUS_M * radians(pub.latitude - start.latitude)       # North-South displacement in metres. `start` is the reference point. Starting pub will have coordinates (0, 0)
     return x, y     # Makes converted coordinates available to other functions
-
 
 # Calculate the distance between a pub and the line
 def distance_to_line(pub: Pub, start: Pub, end: Pub) -> float:      # Three pubs: start pub at (0, 0), end pub at (ex, ey) and a candidate pub (px, py)
-
     px, py = relative_xy(pub, start)        # Candidate pub
     ex, ey = relative_xy(end, start)        # End pub
 
@@ -97,27 +81,17 @@ def distance_to_line(pub: Pub, start: Pub, end: Pub) -> float:      # Three pubs
 
     if length_squared == 0:     # Handles where two geographical points have exactly the same coordinates
         return hypot(px, py)
-
     t = (px * ex + py * ey) / length_squared        # Calculates the point along the line that is nearest to the candidate to the pub.
-
     t = max(0, min(1, t))       # Makes sure the nearest point stays on the line between the start and end pub.
-
     closest_x = t * ex      # Calculate x-coordinates of nearest point on the line.
     closest_y = t * ey      # Calculate y-coordinates of nearest point on the line.
 
     return hypot(px - closest_x, py - closest_y)        # Calculates the distance from the candidate pub to that nearest point on the line, in metres.
 
-
 # Keep only pubs inside the buffer. Takes four arguments.
-def pubs_in_buffer(
-    pubs: list[Pub],    # All available pubs from the CSV
-    start: Pub,         # The starting pub
-    end: Pub,           # The ending pub
-    buffer_metres: float = BUFFER_METRES    # The distance allowed from the line
-) -> list[Pub]:
-
-    # Quick check to make sure the buffer width is not negative
-    if buffer_metres < 0:
+def pubs_in_buffer(pubs: list[Pub],start: Pub, end: Pub, buffer_metres: float = BUFFER_METRES) -> list[Pub]:
+    """@JOSEF"""
+    if buffer_metres < 0:   # Quick check to make sure the buffer width is not negative
         raise ValueError("Buffer width cannot be negative.")
 
     # Returns a list containing only pubs inside the corridor
@@ -128,14 +102,8 @@ def pubs_in_buffer(
     ]
 
 # Create the pub crawl function. Takes five arguments.
-def create_pub_crawl(
-    pubs: list[Pub],        # The list of pubs from pub_data.py (from pub_list_v3.csv). `list[]` gives Python a hint that `pubs` should be a list of `Pub` objects
-    start: Pub,             # The starting pub
-    end: Pub,               # The ending pub
-    total_pubs: int,        # The total number of pubs the user wants to visit. `int` is another type hint (argument should be an integer)
-    buffer_metres: float = BUFFER_METRES        # `float` is another type hint, indicating a decimal number.
-) -> list[Pub]:     # `->` is a return type hint. In this case, the function is expected to return a list of `Pub` objects.
-
+def create_pub_crawl(pubs: list[Pub], start: Pub, end: Pub, total_pubs: int, buffer_metres: float = BUFFER_METRES) -> list[Pub]:
+    """@JOSEF"""
     if total_pubs < 2:
         raise ValueError("A crawl must include at least two pubs.")
 
@@ -184,7 +152,6 @@ def find_pub(pubs: list[Pub], query: str) -> Pub:
         raise ValueError(f"More than one pub matches {query!r}: {names}. Please use a more specific name.")
     return matches[0]
 
-
 def main(pubs: list[Pub] | None = None) -> int:
     """Create a crawl from the supplied pubs, or all pubs when run directly."""
     available_pubs = pubs if pubs is not None else load_pubs()
@@ -213,7 +180,6 @@ def main(pubs: list[Pub] | None = None) -> int:
             print(f"{number}. {pub.name} ({pub.location})")
         print(f"Saved crawl to {saved_path.name}. Use 'load crawl' to show it on the map.")
         return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

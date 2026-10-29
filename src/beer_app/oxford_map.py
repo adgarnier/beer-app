@@ -1,7 +1,5 @@
 """Run a small local web server that displays an interactive map of Oxford."""
 
-from __future__ import annotations
-
 import argparse
 import contextlib
 import json
@@ -19,7 +17,6 @@ if __package__:
     from beer_app.pub_data import Pub
     from beer_app.visited_pubs import load_visit_history, record_visit_today
 
-
 def build_map_page() -> str:
     """Return the HTML page used by the local Oxford map server."""
     if __package__:
@@ -29,7 +26,6 @@ def build_map_page() -> str:
     template = Path(__file__).with_name("templates") / "oxford_map.html"
     return template.read_text(encoding="utf-8")
 
-
 def build_template_asset(filename: str) -> bytes:
     """Return a template asset used by the local Oxford map server."""
     if __package__:
@@ -38,7 +34,6 @@ def build_template_asset(filename: str) -> bytes:
 
     asset = Path(__file__).with_name("templates") / filename
     return asset.read_bytes()
-
 
 def build_static_asset(filename: str) -> bytes:
     """Return a static image asset used by the map."""
@@ -51,7 +46,6 @@ def build_static_asset(filename: str) -> bytes:
 
     asset = Path(__file__).with_name("images") / filename
     return asset.read_bytes()
-
 
 class MapRequestHandler(BaseHTTPRequestHandler):
     """Serve the map page and a lightweight health check."""
@@ -148,11 +142,9 @@ class MapRequestHandler(BaseHTTPRequestHandler):
     def log_message(self, format: str, *args: object) -> None:
         """Suppress routine browser request logs."""
 
-
 @dataclass
 class MapState:
     """Thread-safe pub data shared by the terminal and browser map."""
-
     pubs: list[Pub] = field(default_factory=list)
     version: int = 0
     visited_statuses: dict[int, bool] = field(default_factory=lambda: load_visit_history()[0])
@@ -195,11 +187,9 @@ class MapState:
                 ],
             }
 
-
 @dataclass
 class BackgroundMapServer:
     """A running map server and its background thread."""
-
     server: ThreadingHTTPServer
     thread: threading.Thread
     url: str
@@ -220,12 +210,7 @@ class BackgroundMapServer:
         self.server.server_close()
         self.thread.join(timeout=2)
 
-
-def start_map_server(
-    host: str = "127.0.0.1",
-    port: int = 8000,
-    open_browser: bool = True,
-) -> BackgroundMapServer:
+def start_map_server(host: str = "127.0.0.1", port: int = 8000, open_browser: bool = True) -> BackgroundMapServer:
     """Start the map server in the background and return its controller."""
     server = ThreadingHTTPServer((host, port), MapRequestHandler)
     state = MapState()
@@ -243,7 +228,6 @@ def start_map_server(
     print(f"Oxford Pub Map is running at {url}")
     return BackgroundMapServer(server=server, thread=thread, url=url, state=state)
 
-
 def run_map_server(host: str = "127.0.0.1", port: int = 8000, open_browser: bool = True) -> None:
     """Serve the map until the user stops the process."""
     background_server = start_map_server(host=host, port=port, open_browser=open_browser)
@@ -259,7 +243,6 @@ def run_map_server(host: str = "127.0.0.1", port: int = 8000, open_browser: bool
     finally:
         background_server.stop()
 
-
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line argument parser."""
     parser = argparse.ArgumentParser(description="Open an interactive map centred on Oxford.")
@@ -267,7 +250,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--port", type=int, default=8000, help="local port to use (default: 8000)")
     parser.add_argument("--no-browser", action="store_true", help="do not open the map in a browser automatically")
     return parser
-
 
 def main(argv: list[str] | None = None) -> int:
     """Run the Oxford map command."""
@@ -282,7 +264,6 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(f"Could not start the map server: {error}") from error
 
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())

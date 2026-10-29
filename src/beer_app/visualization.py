@@ -2,11 +2,11 @@
 
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 from multiprocessing import Process
 from matplotlib.axes import Axes
 from matplotlib.ticker import MaxNLocator
 from matplotlib.figure import Figure
-import numpy as np
 from beer_app.stats import pub_counts, visited_pub_times
 
 STATS_HELP = """Stats help
@@ -93,16 +93,10 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
     )
 
     monthly_counts["Pub"] = (monthly_counts["name"] + " (" + monthly_counts["location"] + ")")
-
     plot_data = monthly_counts.pivot(index="Month", columns="Pub", values="Count").fillna(0)
-
     all_months = pd.period_range(df["Month"].min(), df["Month"].max(), freq="M")
-
     plot_data = plot_data.reindex(all_months, fill_value=0)
-
     fig, ax = plt.subplots(figsize=(12, 6))
-
-    # NEW: Plot stacked bars instead of steps
     bottom = np.zeros(len(plot_data))
 
     for i, pub in enumerate(plot_data.columns):
@@ -122,7 +116,6 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
 
         bottom += counts
 
-    # NEW: Add total visits above each bar
     for i, total in enumerate(bottom):
         if total > 0:
             ax.text(
@@ -136,7 +129,6 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
                 color=TEXT_COLOR
             )
 
-    # CHANGED: Format month labels
     ax.set_xticks(range(len(plot_data)))
     ax.set_xticklabels(
         plot_data.index.strftime("%b %Y"),
@@ -145,10 +137,7 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
     )
 
     ax.set_ylim(bottom=0, top=max(bottom) * 1.15 if len(bottom) else 1)
-
-    # CHANGED: Legend outside chart
     ax.legend(title="Pub", loc="upper left", bbox_to_anchor=(1.02, 1), frameon=False)
-
     format_pub_chart(fig, ax, title="Pub'lishes per Month", xlabel="Month", ylabel="Number of Pub'lishes")
 
     return fig
@@ -178,9 +167,7 @@ def main() -> int:
         # Reap completed graph processes without waiting for open windows.
         graph_processes = [process for process in graph_processes if process.is_alive()]
         try:
-            stats_choice = input(
-                "Choose 'pub' or 'time'. Type '--help' for more info: "
-            ).strip().lower()
+            stats_choice = input("Choose 'pub' or 'time'. Type '--help' for more info: ").strip().lower()
         except (EOFError, KeyboardInterrupt):
             print("\nLeaving stats!")
             return 0
