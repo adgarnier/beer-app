@@ -1,7 +1,5 @@
 """Provide the main menu for the Oxford pub tracking application."""
 
-from __future__ import annotations
-
 from beer_app import oxford_map
 from beer_app.pub_data import LAUNCH_HELP, load_pubs
 from beer_app.pub_loader import LOAD_HELP, UNLOAD_HELP, main as run_load, unload_pubs_from_map
@@ -9,8 +7,6 @@ from beer_app.pub_search import (SEARCH_HELP, search_loaded_pubs)
 from beer_app.visited_pubs import VISIT_HELP, main as run_visited
 from beer_app.visualization import STATS_HELP, main as run_visualization
 from beer_app.pub_crawl import CRAWL_HELP, main as run_pub_crawl
-import matplotlib.pyplot as plt
-
 
 WELCOME_MESSAGE = r"""
 
@@ -92,7 +88,6 @@ COMMAND_HELP = {
     "stats": STATS_HELP,
     "crawl": CRAWL_HELP,
 }
-
 
 def main() -> int:
     """Show the welcome menu and run the selected feature."""
@@ -179,7 +174,6 @@ def main() -> int:
         if map_server is not None:
             print("Stopping the Oxford map...")
             map_server.stop()
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
