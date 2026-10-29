@@ -3,9 +3,14 @@ requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "beer-app"
+name = "beer-app-adgarnier"
 version = "0.1.0"
-description = "Demonstration of setting up continuous integration for a Python project"
+description = "Python-based app for tracking yer pub'lishes"
+authors = [
+    { name = "Andy Garnier" },
+    { name = "Andrew Berley" },
+    { name = "Josef Amin" },
+]
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
@@ -28,8 +33,7 @@ docs = [
 ]
 
 [project.scripts]
-ci-course = "beer_app.cli:main"
-beer-app = "beer_app.main:main"
+beer-app = "beer_app.run:main"
 oxford-pub-map = "beer_app.oxford_map:main"
 
 [tool.setuptools.packages.find]
