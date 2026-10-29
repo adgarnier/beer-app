@@ -261,7 +261,8 @@
 </section>
 <section id="module-beer_app.pub_crawl">
 <span id="generating-a-pub-crawl"></span><h2>Generating a Pub Crawl<a class="headerlink" href="#module-beer_app.pub_crawl" title="Link to this heading">¶</a></h2>
-<p>Generates a pub crawl feature, where the user specifies a start and end pub, and the number of pubs they wish to visit</p>
+<p>Generate pub crawl routes.</p>
+<p>Users specify a starting pub, an ending pub, and the number of pubs to visit.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="beer_app.pub_crawl.crawl_file_path">
 <span class="sig-prename descclassname"><span class="pre">beer_app.pub_crawl.</span></span><span class="sig-name descname"><span class="pre">crawl_file_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="headerlink" href="#beer_app.pub_crawl.crawl_file_path" title="Link to this definition">¶</a></dt>
@@ -271,14 +272,15 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="beer_app.pub_crawl.create_pub_crawl">
 <span class="sig-prename descclassname"><span class="pre">beer_app.pub_crawl.</span></span><span class="sig-name descname"><span class="pre">create_pub_crawl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pubs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_pubs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_metres</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#beer_app.pub_crawl.create_pub_crawl" title="Link to this definition">¶</a></dt>
-<dd><p>Pub crawl function that randomly selects a set number of pubs (set by the user) that
-fall in the corridor between the start and end pub</p>
+<dd><p>Select intermediate pubs for a crawl.</p>
+<p>Randomly choose the requested number of pubs within the corridor between
+the starting and ending pubs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pubs</strong> (<em>list</em>) – A list of pubs that sit in the corridor, created by pubs_in_buffer() above</p></li>
-<li><p><strong>start</strong> (<cite>Pub</cite> object) – The starting pub, specified by the user</p></li>
-<li><p><strong>end</strong> (<cite>Pub</cite> object) – The ending pub, specified by the user</p></li>
+<li><p><strong>start</strong> (<em>'Pub' object</em>) – The starting pub, specified by the user</p></li>
+<li><p><strong>end</strong> (<em>'Pub' object</em>) – The ending pub, specified by the user</p></li>
 <li><p><strong>total_pubs</strong> (<em>integer</em>) – The total number of pubs on the pub crawl, specified by the user</p></li>
 <li><p><strong>buffer_metres</strong> (<em>float</em>) – The buffer distance to create the corridor between start and end</p></li>
 </ul>
@@ -289,7 +291,7 @@ fall in the corridor between the start and end pub</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="beer_app.pub_crawl.distance_to_line">
 <span class="sig-prename descclassname"><span class="pre">beer_app.pub_crawl.</span></span><span class="sig-name descname"><span class="pre">distance_to_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#beer_app.pub_crawl.distance_to_line" title="Link to this definition">¶</a></dt>
-<dd><p>Calculates the distance between a pub and the line between start and end pub</p>
+<dd><p>Calculate the distance between a pub and the line between start and end pub.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -307,7 +309,7 @@ fall in the corridor between the start and end pub</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="beer_app.pub_crawl.pubs_in_buffer">
 <span class="sig-prename descclassname"><span class="pre">beer_app.pub_crawl.</span></span><span class="sig-name descname"><span class="pre">pubs_in_buffer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pubs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_metres</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#beer_app.pub_crawl.pubs_in_buffer" title="Link to this definition">¶</a></dt>
-<dd><p>A function to create a list of pubs that fall within the corridor created above.</p>
+<dd><p>Create a list of pubs that fall within the corridor created above.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -318,6 +320,12 @@ fall in the corridor between the start and end pub</p>
 </ul>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.pub_crawl.relative_xy">
+<span class="sig-prename descclassname"><span class="pre">beer_app.pub_crawl.</span></span><span class="sig-name descname"><span class="pre">relative_xy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pub</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#beer_app.pub_crawl.relative_xy" title="Link to this definition">¶</a></dt>
+<dd><p>Set East-West and North-south displacement in metres.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -367,7 +375,7 @@ fall in the corridor between the start and end pub</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="beer_app.visualization.launch_stats_graph">
 <span class="sig-prename descclassname"><span class="pre">beer_app.visualization.</span></span><span class="sig-name descname"><span class="pre">launch_stats_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beer_app.visualization.launch_stats_graph" title="Link to this definition">¶</a></dt>
-<dd><p>Launches the stats graph.</p>
+<dd><p>Launch the stats graph.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -391,13 +399,13 @@ fall in the corridor between the start and end pub</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="beer_app.visualization.show_visits_over_time">
 <span class="sig-prename descclassname"><span class="pre">beer_app.visualization.</span></span><span class="sig-name descname"><span class="pre">show_visits_over_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#beer_app.visualization.show_visits_over_time" title="Link to this definition">¶</a></dt>
-<dd><p>Plots pub visits overtime.</p>
+<dd><p>Plot pub visits overtime.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="beer_app.visualization.show_visits_per_pub">
 <span class="sig-prename descclassname"><span class="pre">beer_app.visualization.</span></span><span class="sig-name descname"><span class="pre">show_visits_per_pub</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#beer_app.visualization.show_visits_per_pub" title="Link to this definition">¶</a></dt>
-<dd><p>Plots visits per pub.</p>
+<dd><p>Visit per pub.</p>
 </dd></dl>
 
 </section>
