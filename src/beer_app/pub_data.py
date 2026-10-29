@@ -15,11 +15,12 @@ Commands:
 """
 
 REQUIRED_COLUMNS = {"ID", "Pub", "Road", "Location", "Sponsor", "Notes", "Latitude", "Longitude"}
-pub_list = "pub_list_v3.csv"
+PUB_LIST = "pub_list_v3.csv"
 
 @dataclass(frozen=True)
 class Pub:
     """A pub that can be displayed on the Oxford map."""
+
     id: int
     name: str
     road: str
@@ -36,8 +37,8 @@ class Pub:
 def _default_pub_list():
     """Return the packaged pub-list resource."""
     if __package__:
-        return files("beer_app").joinpath("data", pub_list)
-    return Path(__file__).with_name("data") / pub_list
+        return files("beer_app").joinpath("data", PUB_LIST)
+    return Path(__file__).with_name("data") / PUB_LIST
 
 def load_pubs(path: str | Path | None = None) -> list[Pub]:
     """Load pubs from a CSV file, using the packaged list by default."""
@@ -83,4 +84,4 @@ def _pub_from_row(row: dict[str, str], row_number: int) -> Pub:
 
 if __name__ == "__main__":
     loaded_pubs = load_pubs()
-    print(f"Loaded {len(loaded_pubs)} pubs from {pub_list}")
+    print(f"Loaded {len(loaded_pubs)} pubs from {PUB_LIST}")

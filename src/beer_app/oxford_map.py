@@ -102,7 +102,8 @@ class MapRequestHandler(BaseHTTPRequestHandler):
                 self.send_error(404, "Visited marker image is missing")
                 return
             self.send_response(200)
-            self.send_header("Content-Type", mimetypes.guess_type("visitbadge.png")[0] or "image/png")
+            self.send_header("Content-Type",
+                             mimetypes.guess_type("visitbadge.png")[0] or "image/png")
             self.send_header("Cache-Control", "public, max-age=3600")
             self.send_header("Content-Length", str(len(content)))
             self.end_headers()
@@ -145,6 +146,7 @@ class MapRequestHandler(BaseHTTPRequestHandler):
 @dataclass
 class MapState:
     """Thread-safe pub data shared by the terminal and browser map."""
+
     pubs: list[Pub] = field(default_factory=list)
     version: int = 0
     visited_statuses: dict[int, bool] = field(default_factory=lambda: load_visit_history()[0])
@@ -190,6 +192,7 @@ class MapState:
 @dataclass
 class BackgroundMapServer:
     """A running map server and its background thread."""
+
     server: ThreadingHTTPServer
     thread: threading.Thread
     url: str
@@ -210,7 +213,11 @@ class BackgroundMapServer:
         self.server.server_close()
         self.thread.join(timeout=2)
 
-def start_map_server(host: str = "127.0.0.1", port: int = 8000, open_browser: bool = True) -> BackgroundMapServer:
+def start_map_server(
+        host: str = "127.0.0.1",
+        port: int = 8000,
+        open_browser: bool = True
+        ) -> BackgroundMapServer:
     """Start the map server in the background and return its controller."""
     server = ThreadingHTTPServer((host, port), MapRequestHandler)
     state = MapState()
@@ -246,9 +253,12 @@ def run_map_server(host: str = "127.0.0.1", port: int = 8000, open_browser: bool
 def build_parser() -> argparse.ArgumentParser:
     """Create the command-line argument parser."""
     parser = argparse.ArgumentParser(description="Open an interactive map centred on Oxford.")
-    parser.add_argument("--host", default="127.0.0.1", help="local address to serve (default: 127.0.0.1)")
-    parser.add_argument("--port", type=int, default=8000, help="local port to use (default: 8000)")
-    parser.add_argument("--no-browser", action="store_true", help="do not open the map in a browser automatically")
+    parser.add_argument("--host", default="127.0.0.1",
+                        help="local address to serve (default: 127.0.0.1)")
+    parser.add_argument("--port", type=int, default=8000,
+                        help="local port to use (default: 8000)")
+    parser.add_argument("--no-browser", action="store_true",
+                        help="do not open the map in a browser automatically")
     return parser
 
 def main(argv: list[str] | None = None) -> int:

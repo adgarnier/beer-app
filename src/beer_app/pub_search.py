@@ -76,7 +76,12 @@ def search_pubs(pubs: Iterable[Pub], query: str) -> list[Pub]:
 
     matches = []
     for pub in pub_list:
-        searchable_text = " ".join((pub.name, pub.road, pub.location, pub.sponsor, pub.notes)).casefold()
+        searchable_text = " ".join((
+            pub.name,
+            pub.road,
+            pub.location,
+            pub.sponsor,
+            pub.notes)).casefold()
         if all(term in searchable_text for term in terms):
             matches.append(pub)
     return matches
@@ -125,7 +130,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Search the Oxford pub list.", add_help=False)
     parser.add_argument("--help", action="store_true", help="show search guidance")
     parser.add_argument("--list", nargs="?", const="fields", choices=("fields", *LISTABLE_FIELDS))
-    parser.add_argument("query", nargs="*", help="words to find in pub names, roads, locations, sponsors, or notes")
+    parser.add_argument("query", nargs="*",
+                        help="words to find in pub names, roads, locations, sponsors, or notes")
     args = parser.parse_args(argv)
 
     if args.help:

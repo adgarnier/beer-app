@@ -1,7 +1,7 @@
 """Summary statistics for the uploaded pub database."""
 
-import pandas as pd
 from importlib.resources import files
+import pandas as pd
 from beer_app.pub_data import load_pubs
 
 def pub_counts():

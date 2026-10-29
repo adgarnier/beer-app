@@ -1,9 +1,9 @@
 """Visualizing Script for Pub STATS bby."""
 
+from multiprocessing import Process
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from multiprocessing import Process
 from matplotlib.axes import Axes
 from matplotlib.ticker import MaxNLocator
 from matplotlib.figure import Figure
@@ -80,8 +80,6 @@ def p_visits_per_pub(pub_count): #will take pub_counts() from beer_app.stats
 
 def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
     """Plot monthly pub visits as a cozy stacked bar chart."""
-
-    # KEEP: Your existing data preparation
     df = visited_pub_times.copy()
     df["VisitDate"] = pd.to_datetime(df["VisitDate"])
     df["Month"] = df["VisitDate"].dt.to_period("M")
@@ -92,7 +90,7 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
         .reset_index(name="Count")
     )
 
-    monthly_counts["Pub"] = (monthly_counts["name"] + " (" + monthly_counts["location"] + ")")
+    monthly_counts["Pub"] = monthly_counts["name"] + " (" + monthly_counts["location"] + ")"
     plot_data = monthly_counts.pivot(index="Month", columns="Pub", values="Count").fillna(0)
     all_months = pd.period_range(df["Month"].min(), df["Month"].max(), freq="M")
     plot_data = plot_data.reindex(all_months, fill_value=0)
@@ -138,23 +136,23 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
 
     ax.set_ylim(bottom=0, top=max(bottom) * 1.15 if len(bottom) else 1)
     ax.legend(title="Pub", loc="upper left", bbox_to_anchor=(1.02, 1), frameon=False)
-    format_pub_chart(fig, ax, title="Pub'lishes per Month", xlabel="Month", ylabel="Number of Pub'lishes")
+    format_pub_chart(fig, ax, title="Pub'lishes per Month",
+                     xlabel="Month", ylabel="Number of Pub'lishes")
 
     return fig
 
-
 def show_visits_per_pub():
-    """Plots visits per pub."""
+    """Visit per pub."""
     p_visits_per_pub(pub_counts())
     plt.show()
 
 def show_visits_over_time():
-    """Plots pub visits overtime."""
+    """Plot pub visits overtime."""
     p_visits_over_time(visited_pub_times())
     plt.show()
 
 def launch_stats_graph(target):
-    """Launches the stats graph."""
+    """Launch the stats graph."""
     process = Process(target=target, daemon=True)
     process.start()
     return process
@@ -167,7 +165,8 @@ def main() -> int:
         # Reap completed graph processes without waiting for open windows.
         graph_processes = [process for process in graph_processes if process.is_alive()]
         try:
-            stats_choice = input("Choose 'pub' or 'time'. Type '--help' for more info: ").strip().lower()
+            stats_choice = input("Choose 'pub' or 'time'.  \
+            Type '--help' for more info: ").strip().lower()
         except (EOFError, KeyboardInterrupt):
             print("\nLeaving stats!")
             return 0
@@ -185,7 +184,8 @@ def main() -> int:
             print("Leaving stats!")
             return 0
 
-        print("Unknown stats option. Choose 'visits per pub' or 'visits over time'. Exit with 'quit'.")
+        print("Unknown stats option. Choose 'visits per pub' or \
+            'visits over time'. Exit with 'quit'.")
 
 if __name__ == "__main__":
     raise SystemExit(main())
