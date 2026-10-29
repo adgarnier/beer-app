@@ -69,7 +69,7 @@ def visited_pub_times():
     #Merge visit counts with pub names
     filt_df = pd.merge(
         filt_df,
-        pubs_df[["id", "name"]],
+        pubs_df[["id", "name", "location"]],
         left_on="ID",
         right_on="id",
         how="left"
