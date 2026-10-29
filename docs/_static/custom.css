@@ -1,0 +1,201 @@
+/* Pub'lish documentation theme: cozy pub */
+
+:root {
+  --pub-paper: #f7f0e3;
+  --pub-paper-light: #fffaf1;
+  --pub-ink: #493125;
+  --pub-muted-ink: #604a3a;
+  --pub-wood: #5a3528;
+  --pub-wood-deep: #3b251e;
+  --pub-amber: #d09a47;
+  --pub-brick: #8b4937;
+  --pub-sage: #647c5b;
+  --pub-plum: #6d536f;
+  --pub-copper: #b76e50;
+  --pub-teal: #477c78;
+  --pub-border: #c4b39f;
+  --pub-grid: #806c59;
+}
+
+html {
+  background: var(--pub-paper);
+}
+
+body {
+  color: var(--pub-ink);
+  background: var(--pub-paper);
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", serif;
+  line-height: 1.7;
+}
+
+div.document {
+  background: var(--pub-paper-light);
+  border: 1px solid #e5d8c5;
+  border-radius: 8px;
+  box-shadow: 0 8px 28px rgb(59 37 30 / 9%);
+}
+
+/* A stronger pub interior: dark stained wood with a warm brass edge. */
+div.sphinxsidebar {
+  box-sizing: border-box;
+  margin-top: 1.5em;
+  padding: 1.25em 1.1em;
+  border: 1px solid #76503b;
+  border-top: 5px solid var(--pub-amber);
+  border-radius: 8px;
+  background: linear-gradient(155deg, #684332 0%, var(--pub-wood) 48%, var(--pub-wood-deep) 100%);
+  box-shadow: inset 0 1px 0 rgb(255 250 241 / 10%), 0 7px 18px rgb(59 37 30 / 20%);
+}
+
+div.sphinxsidebar p,
+div.sphinxsidebar li {
+  color: #f3e7d5;
+}
+
+div.sphinxsidebar ul {
+  margin-left: 1.1em;
+}
+
+div.sphinxsidebar li {
+  padding: 0.12em 0;
+}
+
+div.sphinxsidebar a {
+  color: #f3d6a0;
+  text-decoration: none;
+}
+
+div.sphinxsidebar a:hover,
+div.sphinxsidebar a:focus {
+  color: #fffaf1;
+  text-decoration: underline;
+}
+
+div.sphinxsidebar .searchform {
+  margin-top: 1.2em;
+  padding-top: 1em;
+  border-top: 1px solid rgb(247 240 227 / 25%);
+}
+
+div.sphinxsidebar input {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+div.footer {
+  color: #806c59;
+}
+
+div.footer a {
+  color: var(--pub-brick);
+}
+
+div.body h1,
+div.body h2,
+div.body h3,
+div.body h4,
+div.body h5,
+div.body h6 {
+  color: var(--pub-wood);
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", serif;
+  font-weight: 700;
+}
+
+div.body h1 {
+  border-bottom: 3px solid var(--pub-amber);
+  padding-bottom: 0.35em;
+}
+
+div.body h2 {
+  border-bottom: 1px solid var(--pub-border);
+  padding-bottom: 0.2em;
+}
+
+a {
+  color: var(--pub-brick);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover,
+a:focus {
+  color: var(--pub-teal);
+}
+
+code,
+pre,
+div.highlight {
+  border-color: #ddcbb3;
+  border-radius: 5px;
+}
+
+code {
+  color: var(--pub-wood);
+  background: #f1e6d5;
+}
+
+pre,
+div.highlight {
+  background: #f3eadb;
+}
+
+table.docutils {
+  border-color: var(--pub-border);
+  box-shadow: 0 2px 8px rgb(59 37 30 / 5%);
+}
+
+table.docutils th {
+  color: var(--pub-paper-light);
+  background: var(--pub-wood);
+}
+
+table.docutils td,
+table.docutils th {
+  border-color: var(--pub-border);
+}
+
+table.docutils tr:nth-child(even) td {
+  background: #f7f0e3;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--pub-border);
+}
+
+/* Keep Alabaster's sidebar headings legible over the timber background. */
+div.sphinxsidebar h3,
+div.sphinxsidebar h4 {
+  color: var(--pub-amber);
+  font-family: Georgia, "Palatino Linotype", "Book Antiqua", serif;
+}
+
+/* Callouts echo the chart palette while keeping the page easy to read. */
+div.admonition {
+  border: 1px solid var(--pub-border);
+  border-left: 4px solid var(--pub-amber);
+  border-radius: 4px;
+  background: #fbf5ea;
+}
+
+div.note {
+  border-left-color: var(--pub-teal);
+}
+
+div.warning,
+div.danger {
+  border-left-color: var(--pub-brick);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a {
+    transition: color 140ms ease;
+  }
+}
+
+@media (max-width: 700px) {
+  div.document {
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
