@@ -16,6 +16,19 @@ function createPopup(pub) {
   heading.textContent = pub.name;
   popup.appendChild(heading);
 
+  if (pub.visited) {
+    const visited = document.createElement("p");
+    visited.className = "visited-marker";
+    const image = document.createElement("img");
+    image.src = "/images/visitbadge.png";
+    image.alt = "Visited";
+    image.width = 24;
+    image.height = 24;
+    visited.appendChild(image);
+    visited.appendChild(document.createTextNode(" Visited"));
+    popup.appendChild(visited);
+  }
+
   if (pub.road || pub.location) {
     const address = document.createElement("p");
     address.className = "address";
@@ -39,6 +52,30 @@ function createPopup(pub) {
     notes.appendChild(document.createTextNode(pub.notes));
     popup.appendChild(notes);
   }
+
+  const visitButton = document.createElement("button");
+  visitButton.className = "visited-today-button";
+  visitButton.type = "button";
+  visitButton.disabled = pub.visited_today;
+  visitButton.textContent = pub.visited_today ? "Visited today ✓" : "Visited today";
+  visitButton.addEventListener("click", async () => {
+    visitButton.disabled = true;
+    visitButton.textContent = "Saving…";
+    try {
+      const response = await fetch(`/api/pubs/${pub.id}/visit`, { method: "POST" });
+      if (!response.ok) {
+        throw new Error(`Could not record visit: ${response.status}`);
+      }
+      pub.visited = true;
+      pub.visited_today = true;
+      visitButton.textContent = "Visited today ✓";
+    } catch (error) {
+      console.error(error);
+      visitButton.disabled = false;
+      visitButton.textContent = "Try again";
+    }
+  });
+  popup.appendChild(visitButton);
 
   return popup;
 }

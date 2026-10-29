@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import csv
+import threading
 from datetime import date
 from importlib.resources import files
 from pathlib import Path
-
-from .pub_data import Pub
+from beer_app.pub_data import Pub, load_pubs
 
 VISIT_HELP = """VISIT help
 
@@ -16,6 +16,8 @@ Mark off which pubs you have visited by typing the corresponding ID.
 Commands:
   visit --help
 """
+
+_HISTORY_LOCK = threading.Lock()
 
 def _default_visited_path() -> Path:
     """Return the visited-pubs CSV next to the packaged pub lists."""
@@ -63,6 +65,20 @@ def save_visit_history(
                 writer.writerow([pub_id, str(statuses.get(pub_id, False)).lower(), visit_date])
 
 
+def record_visit_today(pub_id: int, path: str | Path | None = None) -> bool:
+    """Record one visit for today, returning whether a new visit was added."""
+    today = date.today().isoformat()
+    with _HISTORY_LOCK:
+        statuses, dates = load_visit_history(path)
+        pub_dates = dates.setdefault(pub_id, [])
+        if today in pub_dates:
+            return False
+        statuses[pub_id] = True
+        pub_dates.append(today)
+        save_visit_history(statuses, dates, path)
+    return True
+
+
 def manage_visited(pubs: list[Pub]) -> None:
     """Show pub visit status and record each visit entered by the user."""
     statuses, dates = load_visit_history()
@@ -105,3 +121,11 @@ def manage_visited(pubs: list[Pub]) -> None:
             dates.setdefault(pub_id, []).append(visit_date)
             save_visit_history(statuses, dates)
             print(f"Recorded a visit to pub {pub_id} on {visit_date}.")
+
+def main(pubs: list[Pub] | None = None) -> int:
+    """Run the interactive visit manager for the supplied or packaged pub list."""
+    manage_visited(pubs if pubs is not None else load_pubs())
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())

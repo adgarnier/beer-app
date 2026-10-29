@@ -31,6 +31,9 @@ def test_map_javascript_contains_oxford_map_behaviour():
     assert "tile.openstreetmap.org" in javascript
     assert "OpenStreetMap contributors" in javascript
     assert 'fetch("/api/pubs")' in javascript
+    assert '"Visited today"' in javascript
+    assert 'method: "POST"' in javascript
+    assert "/visit`" in javascript
     assert "setInterval(updateMap, 1000)" in javascript
 
 
@@ -54,7 +57,8 @@ def test_starts_map_server_in_background(server_class):
     server.serve_forever.assert_called_once_with()
 
 
-def test_map_state_is_empty_until_pubs_are_added():
+@patch("beer_app.oxford_map.load_visit_history", return_value=({}, {}))
+def test_map_state_is_empty_until_pubs_are_added(load_visit_history):
     state = MapState()
     pub = Pub(1, "Example Pub", "Example Road", "Oxford", "Independent", "Notes", 51.75, -1.25)
 
@@ -64,8 +68,33 @@ def test_map_state_is_empty_until_pubs_are_added():
 
     assert state.snapshot() == {
         "version": 1,
-        "pubs": [pub.as_dict()],
+        "pubs": [{**pub.as_dict(), "visited": False, "visited_today": False}],
     }
+
+
+@patch("beer_app.oxford_map.record_visit_today", return_value=True)
+@patch("beer_app.oxford_map.load_visit_history", return_value=({}, {}))
+def test_map_state_records_visit_for_loaded_pub(load_visit_history, record_visit_today):
+    state = MapState()
+    pub = Pub(1, "Example Pub", "Example Road", "Oxford", "Independent", "Notes", 51.75, -1.25)
+    state.replace_pubs([pub])
+
+    assert state.record_visit_today(pub.id)
+
+    record_visit_today.assert_called_once_with(pub.id)
+    assert state.visited_statuses[pub.id]
+
+
+@patch("beer_app.oxford_map.load_visit_history", return_value=({}, {}))
+def test_map_state_rejects_visit_for_pub_not_on_map(load_visit_history):
+    state = MapState()
+
+    try:
+        state.record_visit_today(999)
+    except KeyError as error:
+        assert error.args == (999,)
+    else:
+        raise AssertionError("Expected an unloaded pub to be rejected")
 
 
 def test_background_server_can_clear_pubs():

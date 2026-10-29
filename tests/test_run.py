@@ -176,3 +176,37 @@ def test_search_list_command_stays_in_search_mode(input_mock, start_map_server, 
     output = capsys.readouterr().out
     assert "Available location values" in output
     assert "Jericho" in output
+
+
+@patch("beer_app.run.plt.show")
+@patch("beer_app.run.p_visits_per_pub")
+@patch("beer_app.run.pub_counts", return_value="pub counts")
+@patch("builtins.input", side_effect=["stats", "visits per pub", "quit"])
+def test_stats_can_show_visits_per_pub(input_mock, pub_counts, p_visits_per_pub, show):
+    assert main() == 0
+
+    p_visits_per_pub.assert_called_once_with("pub counts")
+    show.assert_called_once_with()
+
+
+@patch("beer_app.run.plt.show")
+@patch("beer_app.run.p_visits_over_time")
+@patch("beer_app.run.visited_pub_times", return_value="visit times")
+@patch("builtins.input", side_effect=["stats", "visits over time", "quit"])
+def test_stats_can_show_visits_over_time(input_mock, visited_pub_times, p_visits_over_time, show):
+    assert main() == 0
+
+    p_visits_over_time.assert_called_once_with("visit times")
+    show.assert_called_once_with()
+
+
+@patch("beer_app.run.plt.show")
+@patch("beer_app.run.p_visits_per_pub")
+@patch("beer_app.run.pub_counts", return_value="pub counts")
+@patch("builtins.input", side_effect=["stats", "--help", "pub", "quit"])
+def test_stats_help_stays_in_stats_menu(input_mock, pub_counts, p_visits_per_pub, show, capsys):
+    assert main() == 0
+
+    assert "Stats help" in capsys.readouterr().out
+    p_visits_per_pub.assert_called_once_with("pub counts")
+    show.assert_called_once_with()

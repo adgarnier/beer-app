@@ -3,12 +3,23 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import pandas as pd
+from multiprocessing import Process
 from matplotlib.ticker import MaxNLocator
 from matplotlib.figure import Figure
 from matplotlib.colors import to_hex
 import matplotlib.colors as mcolors
 import numpy as np
 
+STATS_HELP = """Stats help
+
+Pick between the two graph options by entering 'stats'
+followed by your choice of 'pub' or 'time'.
+
+Commands:
+  --help  shows this output
+  pub     shows a graph for visits per pub
+  time    shows a graph for visits over time
+"""
 
 def p_visits_per_pub(pub_count): #will take pub_counts() from beer_app.stats
     """Plot the number of Pub'lishes per pub."""
@@ -170,7 +181,7 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
 #will take visited_pub_times() from beer_app.stats
 # p_visits_per_pub(pub_counts())
 # plt.show()
-from beer_app.stats import visited_pub_times
-p_visits_over_time(visited_pub_times())
-plt.show()
-print("Print")
+#from beer_app.stats import visited_pub_times
+#p_visits_over_time(visited_pub_times())
+#plt.show()
+#print("Print")
