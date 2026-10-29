@@ -35,7 +35,7 @@ Pub'lish documentation
 
    Welcome to PUB`LISH, your Oxford pub companion.
 
-   See the README file `here`_
+See the README file `here`_.
 
 .. _here: https://adgarnier.github.io/beer-app/readme.html
 
