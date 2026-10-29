@@ -165,8 +165,9 @@ def main() -> int:
         # Reap completed graph processes without waiting for open windows.
         graph_processes = [process for process in graph_processes if process.is_alive()]
         try:
-            stats_choice = input("Choose 'pub' or 'time'.  \
-            Type '--help' for more info: ").strip().lower()
+            stats_choice = input(
+                "Choose 'pub' or 'time'. Type '--help' for more info: "
+                ).strip().lower()
         except (EOFError, KeyboardInterrupt):
             print("\nLeaving stats!")
             return 0
