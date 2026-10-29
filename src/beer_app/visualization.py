@@ -1,14 +1,13 @@
 """Visualizing Script for Pub STATS bby."""
 
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
 import pandas as pd
 from multiprocessing import Process
+from matplotlib.axes import Axes
 from matplotlib.ticker import MaxNLocator
 from matplotlib.figure import Figure
-from matplotlib.colors import to_hex
-import matplotlib.colors as mcolors
 import numpy as np
+from beer_app.stats import pub_counts, visited_pub_times
 
 STATS_HELP = """Stats help
 
@@ -21,15 +20,62 @@ Commands:
   time    shows a graph for visits over time
 """
 
+PUB_COLORS = [
+    "#8B4937",  # Brick red
+    "#D09A47",  # Amber
+    "#647C5B",  # Sage green
+    "#6D536F",  # Plum
+    "#B76E50",  # Copper
+    "#7B6845",  # Olive brown
+    "#477C78",  # Muted teal
+    "#C17F85",  # Dusty rose
+]
+BACKGROUND_COLOR = "#F7F0E3"
+TEXT_COLOR = "#493125"
+
+
+def format_pub_chart(fig: Figure, ax: Axes, *, title: str, xlabel: str, ylabel: str) -> None:
+    """Apply the shared Pub'lish chart style to a figure and axes."""
+    fig.patch.set_facecolor(BACKGROUND_COLOR)
+    ax.set_facecolor(BACKGROUND_COLOR)
+
+    ax.set_xlabel(xlabel, color=TEXT_COLOR)
+    ax.set_ylabel(ylabel, color=TEXT_COLOR)
+    ax.set_title(title, fontsize=16, fontweight="bold", color=TEXT_COLOR, pad=20)
+
+    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+    ax.set_ylim(bottom=0)
+    ax.grid(axis="y", linestyle="--", alpha=0.25, color="#806C59")
+    ax.set_axisbelow(True)
+
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.spines["left"].set_color("#C4B39F")
+    ax.spines["bottom"].set_color("#C4B39F")
+    ax.tick_params(colors="#604A3A")
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right")
+
+    fig.tight_layout()
+
+
 def p_visits_per_pub(pub_count): #will take pub_counts() from beer_app.stats
     """Plot the number of Pub'lishes per pub."""
-    fig = plt.figure(figsize=(10,6))
-    plt.bar(pub_count["name"], pub_count["Count"])
-    plt.xlabel("Pub Legal Name")
-    plt.ylabel("Number of Pub'lishes")
-    plt.title("Pub'lishes per Pub")
-    plt.xticks(rotation=45, ha="right")
-    plt.tight_layout()
+    fig, ax = plt.subplots(figsize=(10, 6))
+    colors = [PUB_COLORS[i % len(PUB_COLORS)] for i in range(len(pub_count))]
+    ax.bar(
+        pub_count["name"],
+        pub_count["Count"],
+        color=colors,
+        edgecolor=BACKGROUND_COLOR,
+        linewidth=0.8,
+    )
+    format_pub_chart(
+        fig,
+        ax,
+        title="Pub'lishes per Pub",
+        xlabel="Pub Legal Name",
+        ylabel="Number of Pub'lishes",
+    )
     return fig
 
 def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
@@ -41,55 +87,20 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
     df["Month"] = df["VisitDate"].dt.to_period("M")
 
     monthly_counts = (
-        df.groupby(["ID", "name", "Month"])
+        df.groupby(["ID", "name", "location", "Month"])
         .size()
         .reset_index(name="Count")
     )
 
-    # NEW: Create pub labels including their IDs
-    monthly_counts["Pub"] = (
-        monthly_counts["name"]
-        + " ("
-        + monthly_counts["ID"].astype(str)
-        + ")"
-    )
+    monthly_counts["Pub"] = (monthly_counts["name"] + " (" + monthly_counts["location"] + ")")
 
-    # NEW: Reshape data for stacking
-    plot_data = monthly_counts.pivot(
-        index="Month",
-        columns="Pub",
-        values="Count"
-    ).fillna(0)
+    plot_data = monthly_counts.pivot(index="Month", columns="Pub", values="Count").fillna(0)
 
-    # KEEP: Include months with no visits
-    all_months = pd.period_range(
-        df["Month"].min(),
-        df["Month"].max(),
-        freq="M"
-    )
+    all_months = pd.period_range(df["Month"].min(), df["Month"].max(), freq="M")
 
-    plot_data = plot_data.reindex(
-        all_months,
-        fill_value=0
-    )
+    plot_data = plot_data.reindex(all_months, fill_value=0)
 
-    # NEW: Warm pub-inspired colour palette
-    pub_colors = [
-        "#8B4937",  # Brick red
-        "#D09A47",  # Amber
-        "#647C5B",  # Sage green
-        "#6D536F",  # Plum
-        "#B76E50",  # Copper
-        "#7B6845",  # Olive brown
-        "#477C78",  # Muted teal
-        "#C17F85",  # Dusty rose
-    ]
-
-    # CHANGED: Create a cream-coloured figure
     fig, ax = plt.subplots(figsize=(12, 6))
-
-    fig.patch.set_facecolor("#F7F0E3")
-    ax.set_facecolor("#F7F0E3")
 
     # NEW: Plot stacked bars instead of steps
     bottom = np.zeros(len(plot_data))
@@ -103,8 +114,8 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
             counts,
             bottom=bottom,
             width=0.75,
-            color=pub_colors[i % len(pub_colors)],
-            edgecolor="#F7F0E3",
+            color=PUB_COLORS[i % len(PUB_COLORS)],
+            edgecolor=BACKGROUND_COLOR,
             linewidth=0.8,
             label=pub
         )
@@ -122,19 +133,8 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
                 va="bottom",
                 fontsize=10,
                 fontweight="bold",
-                color="#493125"
+                color=TEXT_COLOR
             )
-
-    # CHANGED: Format chart
-    ax.set_xlabel("Month", color="#493125")
-    ax.set_ylabel("Number of Pub'lishes", color="#493125")
-    ax.set_title(
-        "Pub'lishes per Month",
-        fontsize=16,
-        fontweight="bold",
-        color="#493125",
-        pad=20
-    )
 
     # CHANGED: Format month labels
     ax.set_xticks(range(len(plot_data)))
@@ -144,44 +144,61 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
         ha="right"
     )
 
-    # KEEP: Whole numbers only
-    ax.yaxis.set_major_locator(MaxNLocator(integer=True))
     ax.set_ylim(bottom=0, top=max(bottom) * 1.15 if len(bottom) else 1)
 
-    # NEW: Subtle horizontal gridlines
-    ax.grid(
-        axis="y",
-        linestyle="--",
-        alpha=0.25,
-        color="#806C59"
-    )
-    ax.set_axisbelow(True)
-
-    # NEW: Remove unnecessary borders
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.spines["left"].set_color("#C4B39F")
-    ax.spines["bottom"].set_color("#C4B39F")
-
-    ax.tick_params(colors="#604A3A")
-
     # CHANGED: Legend outside chart
-    ax.legend(
-        title="Pub",
-        loc="upper left",
-        bbox_to_anchor=(1.02, 1),
-        frameon=False
-    )
+    ax.legend(title="Pub", loc="upper left", bbox_to_anchor=(1.02, 1), frameon=False)
 
-    fig.tight_layout()
+    format_pub_chart(fig, ax, title="Pub'lishes per Month", xlabel="Month", ylabel="Number of Pub'lishes")
 
     return fig
 
-#Calculate pub visits per visited pub just for expirment
-#will take visited_pub_times() from beer_app.stats
-# p_visits_per_pub(pub_counts())
-# plt.show()
-#from beer_app.stats import visited_pub_times
-#p_visits_over_time(visited_pub_times())
-#plt.show()
-#print("Print")
+
+def show_visits_per_pub():
+    """Plots visits per pub."""
+    p_visits_per_pub(pub_counts())
+    plt.show()
+
+def show_visits_over_time():
+    """Plots pub visits overtime."""
+    p_visits_over_time(visited_pub_times())
+    plt.show()
+
+def launch_stats_graph(target):
+    """Launches the stats graph."""
+    process = Process(target=target, daemon=True)
+    process.start()
+    return process
+
+def main() -> int:
+    """Prompt for and display one of the stats graphs."""
+    graph_processes = []
+
+    while True:
+        # Reap completed graph processes without waiting for open windows.
+        graph_processes = [process for process in graph_processes if process.is_alive()]
+        try:
+            stats_choice = input(
+                "Choose 'pub' or 'time'. Type '--help' for more info: "
+            ).strip().lower()
+        except (EOFError, KeyboardInterrupt):
+            print("\nLeaving stats!")
+            return 0
+
+        if stats_choice in {"h", "help", "--help"}:
+            print(STATS_HELP)
+            continue
+        if stats_choice in {"visit per pub", "visits per pub", "pub"}:
+            graph_processes.append(launch_stats_graph(show_visits_per_pub))
+            continue
+        if stats_choice in {"visit over time", "visits over time", "time"}:
+            graph_processes.append(launch_stats_graph(show_visits_over_time))
+            continue
+        if stats_choice in {"q", "quit", "exit", "bye", "cya"}:
+            print("Leaving stats!")
+            return 0
+
+        print("Unknown stats option. Choose 'visits per pub' or 'visits over time'. Exit with 'quit'.")
+
+if __name__ == "__main__":
+    raise SystemExit(main())
