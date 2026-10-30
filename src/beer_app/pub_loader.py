@@ -36,6 +36,7 @@ Commands:
 You must launch the map before unloading pubs.
 """
 
+# Load and unload features
 def load_pubs_onto_map(map_server: BackgroundMapServer, selection: str = "all") -> list[Pub]:
     """Load the selected pubs, display them on the map, and return them."""
     selection = selection.strip().lower()
@@ -67,10 +68,11 @@ def unload_pubs_from_map(map_server: BackgroundMapServer) -> None:
     map_server.clear_pubs()
     print("Removed all pubs from the Oxford map.")
 
+# Main function
 def main(
-    map_server: BackgroundMapServer | None = None,
-    selection: str | None = None,
-) -> list[Pub] | None:
+        map_server: BackgroundMapServer | None = None,
+        selection: str | None = None,
+    ) -> list[Pub] | None:
     """Load pubs onto the supplied map, or launch a map when run as a script."""
     owns_map_server = map_server is None
     if map_server is None:

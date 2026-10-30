@@ -6,18 +6,17 @@
 
 - Requires Python 3.12 or later
 
-- Use the package manager [pip](https://pip.pypa.io/en/stable/) to install **Pub'lish**.
+- Use the package manager [pip](https://test.pypi.org/project/beer-app-adgarnier/) to install **Pub'lish**.
 
      ```bash
-     pip install -i https://test.pypi.org/simple/ beer-app-adgarnier
+     python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ beer-app-adgarnier
      ```
 
 ## Usage
 
 ### Run the App
-```python3
-beer-app
-```
+```beer-app```.
+
 ### Get a list of available commands:
 Run ```--help``` or ``` command --help```.
 
@@ -57,10 +56,12 @@ Quit
 ```
 
 ### Run the App
-For more usage information, visit the website [here] (https://adgarnier.github.io/beer-app/). 
+For more usage information, visit the website [here](https://adgarnier.github.io/beer-app/). 
 
-## License
-This project is licensed under the MIT license. See: [MIT](https://choosealicense.com/licenses/mit/)
+## License & Disclosures
+This project is licensed under the MIT license. See: [MIT](LICENSE).  
+Disclosures can be found [here](DISCLOSURES.md).  
+For the use of AI in this project, see the [AI Disclosure](AI_DISCLOSURE.md).  
 
 ## Acknowledgements
 Once upon a time, three brave adventurers set out to map the pubs of Oxford. Andy carried the map, Andrew carried the data, and Josef carried a suspiciously large snack.
