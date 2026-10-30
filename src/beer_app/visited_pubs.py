@@ -22,7 +22,6 @@ def _default_visited_path() -> Path:
     """Return the visited-pubs CSV next to the packaged pub lists."""
     return Path(files("beer_app").joinpath("data", "visited_pubs.csv"))
 
-
 def load_visit_history(path: str | Path | None = None
                        ) -> tuple[dict[int, bool], dict[int, list[str]]]:
     """Return current visited statuses and visit dates from the CSV."""
@@ -49,7 +48,6 @@ def load_visit_history(path: str | Path | None = None
                 dates.setdefault(pub_id, []).append(visit_date)
     return statuses, dates
 
-
 def save_visit_history(
         statuses: dict[int, bool],
         dates: dict[int, list[str]],
@@ -66,7 +64,6 @@ def save_visit_history(
             for visit_date in visit_dates:
                 writer.writerow([pub_id, str(statuses.get(pub_id, False)).lower(), visit_date])
 
-
 def record_visit_today(pub_id: int, path: str | Path | None = None) -> bool:
     """Record one visit for today, returning whether a new visit was added."""
     today = date.today().isoformat()
@@ -79,7 +76,6 @@ def record_visit_today(pub_id: int, path: str | Path | None = None) -> bool:
         pub_dates.append(today)
         save_visit_history(statuses, dates, path)
     return True
-
 
 def manage_visited(pubs: list[Pub]) -> None:
     """Show pub visit status and record each visit entered by the user."""

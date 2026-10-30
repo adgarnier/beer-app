@@ -185,8 +185,8 @@ def main() -> int:
             print("Leaving stats!")
             return 0
 
-        print("Unknown stats option. Choose 'visits per pub' or \
-            'visits over time'. Exit with 'quit'.")
+        print("Unknown stats option. Choose 'visits per pub' or "
+            "'visits over time'. Exit with 'quit'.")
 
 if __name__ == "__main__":
     raise SystemExit(main())

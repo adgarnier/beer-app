@@ -9,16 +9,7 @@
 - Use the package manager [pip](https://pip.pypa.io/en/stable/) to install **Pub'lish**.
 
      ```bash
-     pip install beer-app
-        _     _     _     _     _     _     _     _     _     _     _
-      ,/_)  ,/_)  ,/_)  ,/_)  ,/_)  ,/_)  ,/_)  ,/_)  ,/_)  ,/_)  ,/_)
-       (")   (")   (")   (")   (")   (")   (")   (")   (")   (")   (")
-       /I\   /I\   /I\   /I\   /I\   /I\   /I\   /I\   /I\   /I\   /I\
-      (/^\) (/^\) (/^\) (/^\) (/^\) (/^\) (/^\) (/^\) (/^\) (/^\) (/^\)
-       |||   |||   |||   |||   |||   |||   |||   |||   |||   |||   |||
-       |||   |||   |||   |||   |||   |||   |||   |||   |||   |||   |||
-      _|||_ _|||_ _|||_ _|||_ _|||_ _|||_ _|||_ _|||_ _|||_ _|||_ _|||_
-     ~~~~~~~~~~Add in the actual pipinstall once packaged.~~~~~~~~~~~~~
+     pip install -i https://test.pypi.org/simple/ beer-app-adgarnier
      ```
 
 ## Usage
@@ -65,8 +56,10 @@ Quit
   Stop the map server and close PUB'LISH.
 ```
 
-## License
+### Run the App
+For more usage information, visit the website [here] (https://adgarnier.github.io/beer-app/). 
 
+## License
 This project is licensed under the MIT license. See: [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Acknowledgements
