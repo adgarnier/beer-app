@@ -68,11 +68,11 @@ def distance_to_line(pub: Pub, start: Pub, end: Pub) -> float:
     return hypot(px - closest_x, py - closest_y)
 
 def pubs_in_buffer(
-    pubs: list[Pub],
-    start: Pub,
-    end: Pub,
-    buffer_metres: float = BUFFER_METRES,
-) -> list[Pub]:
+        pubs: list[Pub],
+        start: Pub,
+        end: Pub,
+        buffer_metres: float = BUFFER_METRES,
+    ) -> list[Pub]:
     """
     Create a list of pubs that fall within the corridor created above.
 
@@ -98,12 +98,12 @@ def pubs_in_buffer(
     ]
 
 def create_pub_crawl(
-    pubs: list[Pub],
-    start: Pub,
-    end: Pub,
-    total_pubs: int,
-    buffer_metres: float = BUFFER_METRES,
-) -> list[Pub]:
+        pubs: list[Pub],
+        start: Pub,
+        end: Pub,
+        total_pubs: int,
+        buffer_metres: float = BUFFER_METRES,
+    ) -> list[Pub]:
     """Select intermediate pubs for a crawl.
 
     Randomly choose the requested number of pubs within the corridor between
