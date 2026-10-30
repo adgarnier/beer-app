@@ -9,15 +9,14 @@
 - Use the package manager [pip](https://test.pypi.org/project/beer-app-adgarnier/) to install **Pub'lish**.
 
      ```bash
-     pip install -i https://test.pypi.org/simple/ beer-app-adgarnier
+     python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ beer-app-adgarnier
      ```
 
 ## Usage
 
 ### Run the App
-```python3
-beer-app
-```
+```beer-app```.
+
 ### Get a list of available commands:
 Run ```--help``` or ``` command --help```.
 
