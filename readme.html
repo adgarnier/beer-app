@@ -218,45 +218,23 @@
 <ul>
 <li><p>Requires Python 3.12 or later</p></li>
 <li><p>Use the package manager <a href="https://test.pypi.org/project/beer-app-adgarnier/">pip</a> to install <strong>Pub’lish</strong>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-i</span> https://test.pypi.org/simple/ beer-app-adgarnier</span></code></pre></div></li>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="at">--index-url</span> https://test.pypi.org/simple/ <span class="at">--extra-index-url</span> https://pypi.org/simple/ beer-app-adgarnier</span></code></pre></div></li>
 </ul>
 <h2 id="usage">Usage</h2>
 <h3 id="run-the-app">Run the App</h3>
-<pre class="python3"><code>beer-app</code></pre>
-<h3 id="get-a-list-of-available-commands">Get a list of available commands:</h3>
-<p>Run <code>--help</code> or <code>command --help</code>.</p>
-<p>Example commands:</p>
-<pre><code>Launch
-  Open the interactive Oxford pub map in your browser.
-  Use &#39;launch --help&#39; for more information.
+<pre class="beer-app```."><code>
+### Get a list of available commands:
+Run ```--help``` or ``` command --help```.
 
-Load
-  Add pubs to the map. Choose from all, visited, or unvisited pubs.
-  You can also enter &#39;load all&#39;, &#39;load visited&#39;, or &#39;load unvisited&#39;.
-  Use &#39;load --help&#39; for more information.
-
-Unload
-  Remove the currently loaded pubs from the map.
-  Use &#39;unload --help&#39; for more information.
-
-Search
-  Search the loaded pubs using names, roads, locations, sponsors, or other keywords.
-  Use &#39;search --help&#39; for more information.
-
-Visit
-  Mark pubs as visited and see the pubs you have already visited.
-  Use &#39;visit --help&#39; for more information.
-
-Stats
-  Create a graph showing how many times you have visited each pub.
-  Use &#39;stats --help&#39; for more information.
-
-Crawl
-  Create your own pub crawl.
-  Use &#39;crawl --help&#39; for more information.
-
-Quit
-  Stop the map server and close PUB&#39;LISH.</code></pre>
+Example commands:</code></pre>
+<p>Launch Open the interactive Oxford pub map in your browser. Use ‘launch –help’ for more information.</p>
+<p>Load Add pubs to the map. Choose from all, visited, or unvisited pubs. You can also enter ‘load all’, ‘load visited’, or ‘load unvisited’. Use ‘load –help’ for more information.</p>
+<p>Unload Remove the currently loaded pubs from the map. Use ‘unload –help’ for more information.</p>
+<p>Search Search the loaded pubs using names, roads, locations, sponsors, or other keywords. Use ‘search –help’ for more information.</p>
+<p>Visit Mark pubs as visited and see the pubs you have already visited. Use ‘visit –help’ for more information.</p>
+<p>Stats Create a graph showing how many times you have visited each pub. Use ‘stats –help’ for more information.</p>
+<p>Crawl Create your own pub crawl. Use ‘crawl –help’ for more information.</p>
+<p>Quit Stop the map server and close PUB’LISH. ```</p>
 <h3 id="run-the-app-1">Run the App</h3>
 <p>For more usage information, visit the website <a href="https://adgarnier.github.io/beer-app/">here</a>.</p>
 <h2 id="license-disclosures">License &amp; Disclosures</h2>
