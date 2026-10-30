@@ -39,8 +39,8 @@ WELCOME_MESSAGE = r"""
 
 Welcome to PUB'LISH, your Oxford pub companion.
 
-Use the app to explore pubs on an interactive map, search for pubs, 
-keep track of the pubs you have visited, view statistics about 
+Use the app to explore pubs on an interactive map, search for pubs,
+keep track of the pubs you have visited, view statistics about
 your visits, and make pub crawls.
 
 Type "--help" to see all available options or "quit" to leave the app.
