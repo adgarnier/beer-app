@@ -38,10 +38,70 @@
 <section id="module-beer_app.run">
 <span id="pub-lish-launcher"></span><h2>Pub’lish Launcher<a class="headerlink" href="#module-beer_app.run" title="Link to this heading">¶</a></h2>
 <p>Provide the main menu for the Oxford pub tracking application.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="beer_app.run.MenuState">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">MenuState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">map_server</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.oxford_map.BackgroundMapServer" title="beer_app.oxford_map.BackgroundMapServer"><span class="pre">BackgroundMapServer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loaded_pubs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#beer_app.pub_data.Pub" title="beer_app.pub_data.Pub"><span class="pre">Pub</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#beer_app.run.MenuState" title="Link to this definition">¶</a></dt>
+<dd><p>Keep track of resources shared by the menu choices.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.run.create_pub_crawl">
+<span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">create_pub_crawl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.run.MenuState" title="beer_app.run.MenuState"><span class="pre">MenuState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beer_app.run.create_pub_crawl" title="Link to this definition">¶</a></dt>
+<dd><p>Create a crawl from the pubs currently loaded on the map.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.run.handle_choice">
+<span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">handle_choice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">choice</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.run.MenuState" title="beer_app.run.MenuState"><span class="pre">MenuState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#beer_app.run.handle_choice" title="Link to this definition">¶</a></dt>
+<dd><p>Run one menu choice and return whether the menu should stay open.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.run.launch_map">
+<span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">launch_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.run.MenuState" title="beer_app.run.MenuState"><span class="pre">MenuState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beer_app.run.launch_map" title="Link to this definition">¶</a></dt>
+<dd><p>Launch the Oxford map unless it is already running.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.run.load_map_pubs">
+<span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">load_map_pubs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.run.MenuState" title="beer_app.run.MenuState"><span class="pre">MenuState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beer_app.run.load_map_pubs" title="Link to this definition">¶</a></dt>
+<dd><p>Load the selected pubs onto the running map.</p>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="beer_app.run.main">
 <span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#beer_app.run.main" title="Link to this definition">¶</a></dt>
 <dd><p>Show the welcome menu and run the selected feature.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.run.search_map_pubs">
+<span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">search_map_pubs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.run.MenuState" title="beer_app.run.MenuState"><span class="pre">MenuState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beer_app.run.search_map_pubs" title="Link to this definition">¶</a></dt>
+<dd><p>Search the pubs currently loaded on the map.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.run.show_help">
+<span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">show_help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">choice</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#beer_app.run.show_help" title="Link to this definition">¶</a></dt>
+<dd><p>Print help when <code class="docutils literal notranslate"><span class="pre">choice</span></code> is a general or command help request.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.run.show_stats">
+<span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">show_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beer_app.run.show_stats" title="Link to this definition">¶</a></dt>
+<dd><p>Open the visit statistics flow.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.run.unload_map_pubs">
+<span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">unload_map_pubs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.run.MenuState" title="beer_app.run.MenuState"><span class="pre">MenuState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beer_app.run.unload_map_pubs" title="Link to this definition">¶</a></dt>
+<dd><p>Remove all pubs from the running map.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="beer_app.run.visit_pubs">
+<span class="sig-prename descclassname"><span class="pre">beer_app.run.</span></span><span class="sig-name descname"><span class="pre">visit_pubs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#beer_app.run.MenuState" title="beer_app.run.MenuState"><span class="pre">MenuState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#beer_app.run.visit_pubs" title="Link to this definition">¶</a></dt>
+<dd><p>Open the visit tracker with the current or packaged pub list.</p>
 </dd></dl>
 
 </section>
