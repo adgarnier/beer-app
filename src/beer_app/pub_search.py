@@ -86,10 +86,11 @@ def search_pubs(pubs: Iterable[Pub], query: str) -> list[Pub]:
             matches.append(pub)
     return matches
 
+# Search handler
 def search_loaded_pubs(
-    pubs: Iterable[Pub],
-    on_results: Callable[[list[Pub]], None],
-) -> int:
+        pubs: Iterable[Pub],
+        on_results: Callable[[list[Pub]], None],
+    ) -> int:
     """Prompt for searches, show list/help commands, and send matches to the caller."""
     loaded_pubs = list(pubs)
 
@@ -125,6 +126,7 @@ def search_loaded_pubs(
             print(f"Showing all {len(matches)} pubs.")
         return 0
 
+# Main function
 def main(argv: list[str] | None = None) -> int:
     """Search the packaged pub list from the command line."""
     parser = argparse.ArgumentParser(description="Search the Oxford pub list.", add_help=False)

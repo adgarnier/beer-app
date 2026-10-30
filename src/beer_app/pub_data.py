@@ -17,6 +17,7 @@ Commands:
 REQUIRED_COLUMNS = {"ID", "Pub", "Road", "Location", "Sponsor", "Notes", "Latitude", "Longitude"}
 PUB_LIST = "pub_list_v3.csv"
 
+# Define the Pub class, this is used through much of the codebase
 @dataclass(frozen=True)
 class Pub:
     """A pub that can be displayed on the Oxford map."""

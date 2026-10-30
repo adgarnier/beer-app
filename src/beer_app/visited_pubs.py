@@ -38,6 +38,7 @@ def load_visit_history(path: str | Path | None = None
                 pub_id = int(row["ID"])
             except (KeyError, ValueError):
                 continue
+            # Removed True vs False from visited_pubs.csv so this may be removed
             status_text = (row.get("Visited") or "").strip().lower()
             if status_text in {"true", "1", "yes"}:
                 statuses[pub_id] = True
@@ -89,6 +90,7 @@ def manage_visited(pubs: list[Pub]) -> None:
         print(f"{marker} {pub.id}: {pub.name}{suffix}")
     valid_ids = {pub.id for pub in pubs}
 
+    # CLI input handling
     while True:
         try:
             answer = input("Pub ID or command: ").strip()
