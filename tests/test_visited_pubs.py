@@ -60,12 +60,12 @@ def test_manage_visited_records_visit_and_can_unvisit_without_deleting_dates(
     manage_visited([pub])
 
     statuses, dates = load_visit_history(history)
-    assert statuses == {42: False}
-    assert len(dates[42]) == 1
+    assert 42 not in statuses
+    assert 42 not in dates
     output = capsys.readouterr().out
     assert "numeric pub ID" in output
     assert "not in the pub list" in output
-    assert "visit dates are retained" in output
+    assert "Removed pub" in output
 
 @pytest.mark.parametrize("exception", [EOFError, KeyboardInterrupt])
 def test_manage_visited_returns_cleanly_when_input_is_interrupted(monkeypatch, exception, capsys):

@@ -33,7 +33,7 @@ PUB_COLORS = [
 BACKGROUND_COLOR = "#F7F0E3"
 TEXT_COLOR = "#493125"
 
-
+# Shared formating for the two graphs
 def format_pub_chart(fig: Figure, ax: Axes, *, title: str, xlabel: str, ylabel: str) -> None:
     """Apply the shared Pub'lish chart style to a figure and axes."""
     fig.patch.set_facecolor(BACKGROUND_COLOR)
@@ -57,8 +57,8 @@ def format_pub_chart(fig: Figure, ax: Axes, *, title: str, xlabel: str, ylabel: 
 
     fig.tight_layout()
 
-
-def p_visits_per_pub(pub_count): #will take pub_counts() from beer_app.stats
+# Graph for visits per pub
+def p_visits_per_pub(pub_count): # will take pub_counts() from beer_app.stats
     """Plot the number of Pub'lishes per pub."""
     fig, ax = plt.subplots(figsize=(10, 6))
     colors = [PUB_COLORS[i % len(PUB_COLORS)] for i in range(len(pub_count))]
@@ -78,6 +78,7 @@ def p_visits_per_pub(pub_count): #will take pub_counts() from beer_app.stats
     )
     return fig
 
+# Graph for visits per month by pub
 def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
     """Plot monthly pub visits as a cozy stacked bar chart."""
     df = visited_pub_times.copy()
@@ -141,6 +142,7 @@ def p_visits_over_time(visited_pub_times: pd.DataFrame) -> Figure:
 
     return fig
 
+# Scripts to launch analyses
 def show_visits_per_pub():
     """Visit per pub."""
     p_visits_per_pub(pub_counts())
@@ -157,6 +159,7 @@ def launch_stats_graph(target):
     process.start()
     return process
 
+# Main function
 def main() -> int:
     """Prompt for and display one of the stats graphs."""
     graph_processes = []

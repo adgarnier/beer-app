@@ -105,6 +105,7 @@ def show_help(choice: str) -> bool:
         print(HELP_MESSAGE)
         return True
 
+    # Show the relevant help message
     help_command = choice.removesuffix(" --help") if choice.endswith(" --help") else None
     if help_command in COMMAND_HELP:
         print(COMMAND_HELP[help_command])
@@ -112,6 +113,7 @@ def show_help(choice: str) -> bool:
 
     return False
 
+# Functions to run the chosen feature
 def launch_map(state: MenuState) -> None:
     """Launch the Oxford map unless it is already running."""
     if state.map_server is None:
@@ -166,6 +168,7 @@ def create_pub_crawl(state: MenuState) -> None:
     else:
         run_pub_crawl(state.loaded_pubs)
 
+# CLI input handler
 def handle_choice(choice: str, state: MenuState) -> bool:
     """Run one menu choice and return whether the menu should stay open."""
     if show_help(choice):
@@ -194,6 +197,7 @@ def handle_choice(choice: str, state: MenuState) -> bool:
         )
     return True
 
+# Main function
 def main() -> int:
     """Show the welcome menu and run the selected feature."""
     print(WELCOME_MESSAGE)
