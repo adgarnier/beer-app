@@ -23,46 +23,59 @@ def build_map_page() -> str:
         template = files("beer_app").joinpath("templates", "oxford_map.html")
         return template.read_text(encoding="utf-8")
 
+    # Alternative way of locating the template when the module is not running as part of a package
+    # Finds filepath of current Python file and replaces current filename with "templates"
+    # / operator appends `oxford_map.html`
     template = Path(__file__).with_name("templates") / "oxford_map.html"
     return template.read_text(encoding="utf-8")
 
 def build_template_asset(filename: str) -> bytes:
     """Return a template asset used by the local Oxford map server."""
+    # If running as a package, locate requested file in the packages `templates` directory
+    # Return raw bytes
     if __package__:
         asset = files("beer_app").joinpath("templates", filename)
         return asset.read_bytes()
 
+    # Otherwise, locate the file relative to the current Python file and return its bytes
     asset = Path(__file__).with_name("templates") / filename
     return asset.read_bytes()
 
 def build_static_asset(filename: str) -> bytes:
     """Return a static image asset used by the map."""
+    # Checks whether the requested filename is different from "visitbadge.png"
+    # If different, raise a FileNotFoundError
     if filename != "visitbadge.png":
         raise FileNotFoundError(filename)
 
+    # Locate and read the image from the installed package, and return its bytes
     if __package__:
         asset = files("beer_app").joinpath("images", filename)
         return asset.read_bytes()
 
+    # Otherwise, locate the image in an "images" directory next to the Python module
+    # Return its bytes
     asset = Path(__file__).with_name("images") / filename
     return asset.read_bytes()
 
+# `MapRequestHandler` class inherits from `BaseHTTPRequestHandler`
 class MapRequestHandler(BaseHTTPRequestHandler):
     """Serve the map page and a lightweight health check."""
 
     def do_GET(self) -> None:  # noqa: N802 - method name is defined by BaseHTTPRequestHandler
-        """Handle a browser request."""
+        """Handle a browser request (HTTP GET request)."""
         if self.path in {"/", "/index.html"}:
             content = build_map_page().encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(content)))
             self.end_headers()
-            self.wfile.write(content)
+            self.wfile.write(content)   # Writes HTML bytes to the response stream
             return
 
-        if self.path == "/healthz":
+        if self.path == "/healthz":     # Health-check endpoint verifies the server is responding
             content = b"ok\n"
+            # Send a successful HTTP response containing plain text
             self.send_response(200)
             self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.send_header("Content-Length", str(len(content)))

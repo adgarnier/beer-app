@@ -14,7 +14,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 project = 'Pub`lish'
 copyright = '2026, Andy G, Andrew B, Josef A'
 author = 'Andy G, Andrew B, Josef A'
-release = '0.1'
+release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
