@@ -80,8 +80,8 @@ def record_visit_today(pub_id: int, path: str | Path | None = None) -> bool:
 def manage_visited(pubs: list[Pub]) -> None:
     """Show pub visit status and record each visit entered by the user."""
     statuses, dates = load_visit_history()
-    print("\nEnter a pub ID to record a visit, \
-        'unvisit ID' to clear its status, or Enter to return:")
+    print("\nEnter a pub ID to record a visit, "
+        "'unvisit ID' to clear its status, or Enter to return:")
     for pub in pubs:
         marker = "[x]" if statuses.get(pub.id, False) else "[ ]"
         visit_dates = ", ".join(dates.get(pub.id, []))
@@ -95,7 +95,7 @@ def manage_visited(pubs: list[Pub]) -> None:
         except (EOFError, KeyboardInterrupt):
             print()
             return
-        if not answer:
+        if not answer or answer in {"q", "quit", "exit", "bye"}:
             return
         parts = answer.split()
         unvisit = len(parts) == 2 and parts[0].lower() == "unvisit"
@@ -111,9 +111,10 @@ def manage_visited(pubs: list[Pub]) -> None:
             print("That ID is not in the pub list.")
             continue
         if unvisit:
-            statuses[pub_id] = False
+            statuses.pop(pub_id, None)
+            dates.pop(pub_id, None)
             save_visit_history(statuses, dates)
-            print(f"Marked pub {pub_id} as not visited. Its visit dates are retained.")
+            print(f"Removed pub {pub_id} from the visit history.")
         else:
             visit_date = date.today().isoformat()
             statuses[pub_id] = True
